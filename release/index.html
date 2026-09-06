@@ -32,12 +32,14 @@ body {
   border-radius: 9px;
 
   background:
-    linear-gradient(115deg,
+    linear-gradient(
+      115deg,
       #9b9b94 0%,
       #c0c0b8 18%,
       #96968f 48%,
       #b8b8b0 72%,
-      #888881 100%);
+      #888881 100%
+    );
 
   box-shadow:
     0 18px 40px rgba(0,0,0,.65),
@@ -111,7 +113,6 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: center;
-
   text-shadow: 0 0 7px #5bbcff;
   box-shadow: inset 0 0 20px rgba(0,0,0,.65);
 }
@@ -145,7 +146,7 @@ body {
   box-shadow: inset 0 0 5px #000;
 }
 
-/* BUTTON AREA */
+/* LABEL */
 .label {
   text-align: center;
   font-size: 11px;
@@ -154,6 +155,7 @@ body {
   margin-bottom: 12px;
 }
 
+/* BUTTON AREA */
 .buttons {
   display: flex;
   justify-content: center;
@@ -161,7 +163,7 @@ body {
   flex-wrap: wrap;
 }
 
-/* INDUSTRIAL BUTTON */
+/* INDUSTRIAL BUTTONS */
 .color-button {
   width: 67px;
   height: 67px;
@@ -184,24 +186,24 @@ body {
     inset 0 0 10px rgba(0,0,0,.3);
 }
 
-.blue {
-  background: #177bd3;
-}
-
-.yellow {
-  background: #f0bd20;
-}
-
 .red {
   background: #d8392e;
+}
+
+.green {
+  background: #26a75a;
 }
 
 .black {
   background: #181818;
 }
 
-.green {
-  background: #26a75a;
+.blue {
+  background: #177bd3;
+}
+
+.yellow {
+  background: #f0bd20;
 }
 
 .color-button.used {
@@ -258,7 +260,7 @@ body {
   cursor: default;
 }
 
-/* ACCESS GRANTED */
+/* SUCCESS / ERROR STATES */
 .panel.granted {
   box-shadow:
     0 18px 40px rgba(0,0,0,.65),
@@ -278,7 +280,9 @@ body {
   text-shadow: 0 0 8px #ff4136;
 }
 
+/* MOBILE */
 @media(max-width:480px) {
+
   .panel {
     padding-left: 18px;
     padding-right: 18px;
@@ -318,12 +322,15 @@ body {
 
   <div class="screen-frame">
     <div class="screen" id="screen">
+
       <div class="screen-main" id="mainMessage">
         SYSTEM LOCKED
       </div>
+
       <div class="screen-small" id="smallMessage">
         ENTER RELEASE SEQUENCE
       </div>
+
     </div>
   </div>
 
@@ -339,30 +346,73 @@ body {
     RELEASE SEQUENCE INPUT
   </div>
 
+  <!-- BUTTON ORDER IS DELIBERATELY DIFFERENT FROM THE SOLUTION -->
+
   <div class="buttons">
-    <button class="color-button blue" data-color="blue" aria-label="Blue"></button>
-    <button class="color-button yellow" data-color="yellow" aria-label="Yellow"></button>
-    <button class="color-button red" data-color="red" aria-label="Red"></button>
-    <button class="color-button black" data-color="black" aria-label="Black"></button>
-    <button class="color-button green" data-color="green" aria-label="Green"></button>
+
+    <button
+      class="color-button red"
+      data-color="red"
+      aria-label="Red">
+    </button>
+
+    <button
+      class="color-button green"
+      data-color="green"
+      aria-label="Green">
+    </button>
+
+    <button
+      class="color-button black"
+      data-color="black"
+      aria-label="Black">
+    </button>
+
+    <button
+      class="color-button blue"
+      data-color="blue"
+      aria-label="Blue">
+    </button>
+
+    <button
+      class="color-button yellow"
+      data-color="yellow"
+      aria-label="Yellow">
+    </button>
+
   </div>
 
   <div class="button-labels">
+    <div class="button-label">RED</div>
+    <div class="button-label">GREEN</div>
+    <div class="button-label">BLACK</div>
     <div class="button-label">BLUE</div>
     <div class="button-label">YELLOW</div>
-    <div class="button-label">RED</div>
-    <div class="button-label">BLACK</div>
-    <div class="button-label">GREEN</div>
   </div>
 
   <div class="controls">
-    <button class="control" id="resetButton">RESET</button>
-    <button class="control" id="verifyButton" disabled>VERIFY</button>
+
+    <button
+      class="control"
+      id="resetButton">
+      RESET
+    </button>
+
+    <button
+      class="control"
+      id="verifyButton"
+      disabled>
+      VERIFY
+    </button>
+
   </div>
 
 </div>
 
+
 <script>
+
+/* CORRECT RELEASE SEQUENCE */
 
 const correctSequence = [
   "blue",
@@ -374,31 +424,48 @@ const correctSequence = [
 
 let playerSequence = [];
 
-const buttons = document.querySelectorAll(".color-button");
-const lights = document.querySelectorAll(".sequence-light");
+const buttons =
+  document.querySelectorAll(".color-button");
 
-const verifyButton = document.getElementById("verifyButton");
-const resetButton = document.getElementById("resetButton");
+const lights =
+  document.querySelectorAll(".sequence-light");
 
-const mainMessage = document.getElementById("mainMessage");
-const smallMessage = document.getElementById("smallMessage");
+const verifyButton =
+  document.getElementById("verifyButton");
 
-const screen = document.getElementById("screen");
-const panel = document.getElementById("panel");
+const resetButton =
+  document.getElementById("resetButton");
+
+const mainMessage =
+  document.getElementById("mainMessage");
+
+const smallMessage =
+  document.getElementById("smallMessage");
+
+const screen =
+  document.getElementById("screen");
+
+const panel =
+  document.getElementById("panel");
+
 
 const colors = {
-  blue: "#177bd3",
-  yellow: "#f0bd20",
   red: "#d8392e",
+  green: "#26a75a",
   black: "#181818",
-  green: "#26a75a"
+  blue: "#177bd3",
+  yellow: "#f0bd20"
 };
+
+
+/* COLOR BUTTON INPUT */
 
 buttons.forEach(button => {
 
   button.addEventListener("click", () => {
 
-    const color = button.dataset.color;
+    const color =
+      button.dataset.color;
 
     if (
       playerSequence.length >= 5 ||
@@ -411,14 +478,19 @@ buttons.forEach(button => {
 
     button.classList.add("used");
 
-    const index = playerSequence.length - 1;
+    const index =
+      playerSequence.length - 1;
 
-    lights[index].style.background = colors[color];
+    lights[index].style.background =
+      colors[color];
+
     lights[index].style.boxShadow =
       "0 0 10px " + colors[color];
 
     mainMessage.textContent =
-      "INPUT " + playerSequence.length + " / 5";
+      "INPUT " +
+      playerSequence.length +
+      " / 5";
 
     smallMessage.textContent =
       playerSequence.length === 5
@@ -434,11 +506,15 @@ buttons.forEach(button => {
 });
 
 
+/* VERIFY */
+
 verifyButton.addEventListener("click", () => {
 
   verifyButton.disabled = true;
 
-  mainMessage.textContent = "VERIFYING...";
+  mainMessage.textContent =
+    "VERIFYING...";
+
   smallMessage.textContent =
     "PROCESSING RELEASE PROTOCOL";
 
@@ -458,8 +534,13 @@ verifyButton.addEventListener("click", () => {
       smallMessage.textContent =
         "EMERGENCY EXIT RELEASED";
 
-      screen.classList.add("granted-screen");
-      panel.classList.add("granted");
+      screen.classList.add(
+        "granted-screen"
+      );
+
+      panel.classList.add(
+        "granted"
+      );
 
     }
 
@@ -471,7 +552,9 @@ verifyButton.addEventListener("click", () => {
       smallMessage.textContent =
         "INVALID RELEASE SEQUENCE";
 
-      screen.classList.add("denied-screen");
+      screen.classList.add(
+        "denied-screen"
+      );
 
     }
 
@@ -480,7 +563,12 @@ verifyButton.addEventListener("click", () => {
 });
 
 
-resetButton.addEventListener("click", resetSystem);
+/* RESET */
+
+resetButton.addEventListener(
+  "click",
+  resetSystem
+);
 
 
 function resetSystem() {
@@ -498,16 +586,22 @@ function resetSystem() {
     "denied-screen"
   );
 
-  panel.classList.remove("granted");
+  panel.classList.remove(
+    "granted"
+  );
 
   buttons.forEach(button => {
     button.classList.remove("used");
   });
 
   lights.forEach(light => {
-    light.style.background = "#333";
+
+    light.style.background =
+      "#333";
+
     light.style.boxShadow =
       "inset 0 0 5px #000";
+
   });
 
   verifyButton.disabled = true;
