@@ -1,0 +1,1634 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#10110f">
+
+<title>ALPHA-7 // Hint System</title>
+
+<style>
+
+:root {
+    --bg: #0f100e;
+    --panel: #171815;
+    --panel-dark: #11120f;
+    --text: #eee6cf;
+    --muted: #aaa698;
+    --border: #35372f;
+    --red: #b5322b;
+    --red-light: #d15b50;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    margin: 0;
+    background:
+        radial-gradient(circle at top left,
+        rgba(255,255,255,.035),
+        transparent 28%),
+        repeating-linear-gradient(
+        0deg,
+        rgba(255,255,255,.012) 0 1px,
+        transparent 1px 3px),
+        var(--bg);
+
+    color: var(--text);
+    font-family: "Courier New", Courier, monospace;
+    line-height: 1.55;
+    min-height: 100vh;
+}
+
+.wrap {
+    width: min(980px, calc(100% - 24px));
+    margin: auto;
+    padding: 20px 0 55px;
+}
+
+/* HEADER */
+
+.hero {
+    border: 1px solid var(--border);
+    background: linear-gradient(180deg,#191a17,#121310);
+    padding: 20px;
+    box-shadow: 0 12px 35px rgba(0,0,0,.35);
+    position: relative;
+    overflow: hidden;
+}
+
+.hero::after {
+    content: "";
+    position: absolute;
+    right: -25px;
+    top: -20px;
+    width: 210px;
+    height: 130px;
+    opacity: .18;
+
+    background:
+        repeating-linear-gradient(
+        135deg,
+        transparent 0 18px,
+        var(--red) 18px 27px);
+}
+
+.eyebrow {
+    color: var(--red-light);
+    text-transform: uppercase;
+    letter-spacing: .16em;
+    font-size: .78rem;
+    font-weight: bold;
+}
+
+h1 {
+    margin: .3rem 0 .35rem;
+    font-size: clamp(2.1rem,8vw,4.2rem);
+    line-height: .95;
+    letter-spacing: .05em;
+}
+
+.hero p {
+    color: #bbb7aa;
+    max-width: 760px;
+}
+
+.warning-strip {
+    margin-top: 16px;
+    border-left: 4px solid var(--red);
+    background: #0e0f0d;
+    padding: 11px 12px;
+    color: #a9a598;
+    font-size: .86rem;
+    text-transform: uppercase;
+}
+
+/* CHALLENGES */
+
+.list {
+    margin-top: 16px;
+    display: grid;
+    gap: 10px;
+}
+
+details.challenge {
+    border: 1px solid var(--border);
+    background: linear-gradient(180deg,#171815,#131411);
+    box-shadow: 0 6px 18px rgba(0,0,0,.22);
+}
+
+details.challenge[open] {
+    border-color: #56594e;
+}
+
+summary {
+    list-style: none;
+    cursor: pointer;
+    padding: 16px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    text-transform: uppercase;
+    font-weight: bold;
+    letter-spacing: .05em;
+}
+
+summary::-webkit-details-marker {
+    display: none;
+}
+
+.summary-left {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+}
+
+.num {
+    width: 30px;
+    height: 30px;
+
+    display: grid;
+    place-items: center;
+
+    border: 1px solid #5b5e53;
+    color: #b7b3a6;
+
+    font-size: .8rem;
+}
+
+.plus {
+    color: var(--red-light);
+    font-size: 1.2rem;
+    transition: transform .2s;
+}
+
+details[open] .plus {
+    transform: rotate(45deg);
+}
+
+.content {
+    border-top: 1px solid #2c2e28;
+    padding: 0 16px 16px;
+}
+
+/* HINTS */
+
+.hint {
+    margin-top: 13px;
+    border: 1px solid #3b3d35;
+    background: var(--panel-dark);
+}
+
+.hint.solution {
+    border-color: #74312c;
+    background: linear-gradient(180deg,#18110f,#11120f);
+}
+
+.hint-head {
+    padding: 11px 12px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 12px;
+}
+
+.hint-label {
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+    font-size: .9rem;
+}
+
+.hint-label small {
+    color: #8f8c81;
+    font-weight: normal;
+}
+
+.solution .hint-label {
+    color: #d86d62;
+}
+
+/* BUTTON */
+
+button {
+    border: 1px solid #606459;
+    background: #1b1d18;
+    color: var(--text);
+
+    font-family: inherit;
+    font-size: .78rem;
+
+    text-transform: uppercase;
+
+    padding: 8px 11px;
+    cursor: pointer;
+}
+
+button:hover {
+    border-color: var(--red-light);
+}
+
+.hint-body {
+    display: none;
+    padding: 0 12px 13px;
+    color: #d2ccb9;
+}
+
+.hint-body.show {
+    display: block;
+}
+
+.hint-body p {
+    margin: .45rem 0;
+}
+
+.hint-body ul {
+    margin: .45rem 0 .3rem 1.2rem;
+    padding: 0;
+}
+
+/* CODES */
+
+.code {
+    margin: 12px 0;
+    padding: 12px;
+
+    text-align: center;
+
+    border: 1px dashed #755651;
+    background: #150e0d;
+
+    color: #f0d5cf;
+
+    font-weight: bold;
+    font-size: clamp(1.15rem,4.5vw,1.85rem);
+
+    letter-spacing: .08em;
+}
+
+.danger {
+    color: #df756a;
+    font-weight: bold;
+}
+
+/* FINAL */
+
+.complete {
+    margin-top: 14px;
+
+    border: 1px solid var(--red);
+    background: #130d0c;
+
+    padding: 18px 12px;
+    text-align: center;
+}
+
+.complete span {
+    color: #d16b62;
+    letter-spacing: .16em;
+    font-size: .8rem;
+}
+
+.complete strong {
+    display: block;
+    margin-top: 6px;
+
+    font-size: clamp(1.35rem,5vw,2.2rem);
+}
+
+footer {
+    margin-top: 20px;
+    text-align: center;
+
+    color: #77776f;
+
+    font-size: .74rem;
+    letter-spacing: .08em;
+
+    text-transform: uppercase;
+}
+
+@media(max-width:640px) {
+
+    .wrap {
+        width: calc(100% - 14px);
+        padding-top: 7px;
+    }
+
+    .hero {
+        padding: 16px 13px;
+    }
+
+    summary {
+        padding: 14px 12px;
+    }
+
+    .content {
+        padding: 0 12px 13px;
+    }
+
+    .hint-head {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    button {
+        width: 100%;
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+<main class="wrap">
+
+<header class="hero">
+
+<div class="eyebrow">
+PROJECT UNRIDDLE // RESTRICTED ASSISTANCE
+</div>
+
+<h1>ALPHA-7</h1>
+
+<p>
+Emergency Hint System. Select the challenge where your team is stuck
+and reveal only the assistance you need.
+</p>
+
+<div class="warning-strip">
+Start with Hint 01. Reveal additional help only if required.
+Solution // Override reveals the answer.
+</div>
+
+</header>
+
+
+<section class="list">
+
+
+<!-- START HERE -->
+
+<details class="challenge">
+
+<summary>
+<span class="summary-left">
+<span class="num">01</span>
+<span>START HERE</span>
+</span>
+<span class="plus">+</span>
+</summary>
+
+<div class="content">
+
+<div class="hint">
+<div class="hint-head">
+<div class="hint-label">HINT 01 <small>// NUDGE</small></div>
+<button>Reveal</button>
+</div>
+
+<div class="hint-body">
+<p>The three symbols represent three separate challenges.</p>
+<p>Solve <strong>WATER, FIRE and VENTILATION</strong> before returning to this card.</p>
+</div>
+</div>
+
+
+<div class="hint">
+<div class="hint-head">
+<div class="hint-label">HINT 02 <small>// GUIDANCE</small></div>
+<button>Reveal</button>
+</div>
+
+<div class="hint-body">
+<p>Each challenge will give you a value.</p>
+
+<p>Keep the values in the order shown and use the formula:</p>
+
+<div class="code">
+WATER − FIRE + VENTILATION
+</div>
+
+<p>
+Then scan the QR code and enter the resulting
+<strong>4-digit code</strong>.
+</p>
+</div>
+</div>
+
+
+<div class="hint solution">
+
+<div class="hint-head">
+<div class="hint-label">SOLUTION <small>// OVERRIDE</small></div>
+<button>Reveal</button>
+</div>
+
+<div class="hint-body">
+
+<p>
+If you haven't solved <strong>WATER, FIRE and VENTILATION</strong> yet,
+check their individual hints first.
+</p>
+
+<p>Once you have all three values:</p>
+
+<div class="code">
+3742 − 5 + 70 = 3807
+</div>
+
+<p><strong>ACCESS CODE: 3807</strong></p>
+
+</div>
+</div>
+
+</div>
+</details>
+
+
+<!-- WATER -->
+
+<details class="challenge">
+
+<summary>
+<span class="summary-left">
+<span class="num">02</span>
+<span>WATER</span>
+</span>
+<span class="plus">+</span>
+</summary>
+
+<div class="content">
+
+<div class="hint">
+<div class="hint-head">
+<div class="hint-label">HINT 01 <small>// NUDGE</small></div>
+<button>Reveal</button>
+</div>
+
+<div class="hint-body">
+<p>The four values <strong>A–D</strong> are not the final answer.</p>
+<p>First determine the correct volume for each one.</p>
+</div>
+</div>
+
+
+<div class="hint">
+<div class="hint-head">
+<div class="hint-label">HINT 02 <small>// GUIDANCE</small></div>
+<button>Reveal</button>
+</div>
+
+<div class="hint-body">
+
+<p>Use all <strong>180 ml</strong>.</p>
+
+<p><strong>B</strong> contains twice the volume of <strong>A</strong>.</p>
+
+<p><strong>C</strong> contains <strong>30 ml more than A</strong>.</p>
+
+<p>
+<strong>D</strong> contains the same volume as
+<strong>A and C combined</strong>.
+</p>
+
+<p>
+Once you know the four volumes, use the
+<strong>syringe and the marked container</strong>.
+</p>
+
+</div>
+</div>
+
+
+<div class="hint solution">
+
+<div class="hint-head">
+<div class="hint-label">SOLUTION <small>// OVERRIDE</small></div>
+<button>Reveal</button>
+</div>
+
+<div class="hint-body">
+
+<p>
+<strong>A = 20 ml</strong><br>
+<strong>B = 40 ml</strong><br>
+<strong>C = 50 ml</strong><br>
+<strong>D = 70 ml</strong>
+</p>
+
+<p>
+Measure each level in <strong>A–D order</strong>
+and read the number revealed at each height:
+</p>
+
+<p>
+20 ml → <strong>3</strong><br>
+40 ml → <strong>7</strong><br>
+50 ml → <strong>4</strong><br>
+70 ml → <strong>2</strong>
+</p>
+
+<div class="code">
+WATER = 3742
+</div>
+
+</div>
+</div>
+
+</div>
+</details>
+
+
+<!-- FIRE -->
+
+<details class="challenge">
+
+<summary>
+<span class="summary-left">
+<span class="num">03</span>
+<span>FIRE</span>
+</span>
+<span class="plus">+</span>
+</summary>
+
+<div class="content">
+
+<div class="hint">
+
+<div class="hint-head">
+<div class="hint-label">HINT 01 <small>// NUDGE</small></div>
+<button>Reveal</button>
+</div>
+
+<div class="hint-body">
+
+<p>
+Sometimes the beginning tells you everything you need.
+</p>
+
+<p>
+Look carefully at the <strong>Fire Emergency Procedure</strong>.
+</p>
+
+</div>
+</div>
+
+
+<div class="hint">
+
+<div class="hint-head">
+<div class="hint-label">HINT 02 <small>// GUIDANCE</small></div>
+<button>Reveal</button>
+</div>
+
+<div class="hint-body">
+
+<p>
+Focus on the <strong>first letter of each step</strong>
+in the procedure.
+</p>
+
+<p>Read them from top to bottom.</p>
+
+</div>
+</div>
+
+
+<div class="hint solution">
+
+<div class="hint-head">
+<div class="hint-label">SOLUTION <small>// OVERRIDE</small></div>
+<button>Reveal</button>
+</div>
+
+<div class="hint-body">
+
+<p>The first letters spell:</p>
+
+<div class="code">
+F – I – V – E
+</div>
+
+<p><strong>FIRE = 5</strong></p>
+
+</div>
+</div>
+
+</div>
+</details>
+
+
+<!-- VENTILATION -->
+
+<details class="challenge">
+
+<summary>
+<span class="summary-left">
+<span class="num">04</span>
+<span>VENTILATION</span>
+</span>
+<span class="plus">+</span>
+</summary>
+
+<div class="content">
+
+<div class="hint">
+
+<div class="hint-head">
+<div class="hint-label">HINT 01 <small>// NUDGE</small></div>
+<button>Reveal</button>
+</div>
+
+<div class="hint-body">
+
+<p>
+The audio tells you how to move through the ventilation system.
+</p>
+
+<p>
+Follow the route carefully on the
+<strong>Ventilation Map</strong>.
+</p>
+
+</div>
+</div>
+
+
+<div class="hint">
+
+<div class="hint-head">
+<div class="hint-label">HINT 02 <small>// GUIDANCE</small></div>
+<button>Reveal</button>
+</div>
+
+<div class="hint-body">
+
+<p>
+Follow the directions from the recording in order.
+</p>
+
+<p>
+As you move through the map, note the
+<strong>sector values</strong>
+along your route and add them together.
+</p>
+
+</div>
+</div>
+
+
+<div class="hint solution">
+
+<div class="hint-head">
+<div class="hint-label">SOLUTION <small>// OVERRIDE</small></div>
+<button>Reveal</button>
+</div>
+
+<div class="hint-body">
+
+<p>
+Follow the complete route described in the audio
+and add the corresponding sector values.
+</p>
+
+<div class="code">
+VENTILATION = 70
+</div>
+
+</div>
+</div>
+
+</div>
+</details>
+
+
+<!-- VIDEO -->
+
+<details class="challenge">
+
+<summary>
+<span class="summary-left">
+<span class="num">05</span>
+<span>VIDEO</span>
+</span>
+<span class="plus">+</span>
+</summary>
+
+<div class="content">
+
+<div class="hint">
+
+<div class="hint-head">
+<div class="hint-label">HINT 01 <small>// NUDGE</small></div>
+<button>Reveal</button>
+</div>
+
+<div class="hint-body">
+
+<p>The code gets you into the video.</p>
+<p>The video itself contains the next code.</p>
+<p><strong>Watch carefully.</strong></p>
+
+</div>
+</div>
+
+
+<div class="hint">
+
+<div class="hint-head">
+<div class="hint-label">HINT 02 <small>// GUIDANCE</small></div>
+<button>Reveal</button>
+</div>
+
+<div class="hint-body">
+
+<p>
+There are <strong>four hidden digits</strong>
+somewhere in the video.
+</p>
+
+<p>
+Pay attention to the background, objects, screens
+and details that may appear only briefly.
+</p>
+
+<p>
+Write the digits down in the order they appear.
+</p>
+
+</div>
+</div>
+
+
+<div class="hint solution">
+
+<div class="hint-head">
+<div class="hint-label">SOLUTION <small>// OVERRIDE</small></div>
+<button>Reveal</button>
+</div>
+
+<div class="hint-body">
+
+<p>The four hidden digits are:</p>
+
+<div class="code">
+6 – 5 – 1 – 4
+</div>
+
+<p><strong>CODE = 6514</strong></p>
+
+<p>
+Use <strong>6514</strong>
+to open the next locked container.
+</p>
+
+</div>
+</div>
+
+</div>
+</details>
+
+
+<!-- CORKBOARD -->
+
+<details class="challenge">
+
+<summary>
+<span class="summary-left">
+<span class="num">06</span>
+<span>CORKBOARD</span>
+</span>
+<span class="plus">+</span>
+</summary>
+
+<div class="content">
+
+<div class="hint">
+
+<div class="hint-head">
+<div class="hint-label">HINT 01 <small>// NUDGE</small></div>
+<button>Reveal</button>
+</div>
+
+<div class="hint-body">
+
+<p>
+The coloured pushpins and threads belong together.
+</p>
+
+<p>
+Start with one colour and use the
+<strong>Direction Lock</strong>
+to guide your path.
+</p>
+
+<p>When reading the coordinates, remember:</p>
+
+<div class="code">
+(3,5) → 3 = vertical axis / 5 = horizontal axis
+</div>
+
+</div>
+</div>
+
+
+<div class="hint">
+
+<div class="hint-head">
+<div class="hint-label">HINT 02 <small>// GUIDANCE</small></div>
+<button>Reveal</button>
+</div>
+
+<div class="hint-body">
+
+<p>
+Match each coloured thread to the pushpin
+of the same colour.
+</p>
+
+<p>
+Use the coordinates to find the correct starting point,
+then follow the directions shown on the
+<strong>Direction Lock</strong>.
+</p>
+
+<p>
+Work with <strong>one colour at a time</strong>.
+Once you can see the number formed by the thread,
+remove it and repeat with the next colour.
+</p>
+
+<p>Each completed path forms a number.</p>
+
+</div>
+</div>
+
+
+<div class="hint solution">
+
+<div class="hint-head">
+<div class="hint-label">SOLUTION <small>// OVERRIDE</small></div>
+<button>Reveal</button>
+</div>
+
+<div class="hint-body">
+
+<p>Work through the three colours one at a time:</p>
+
+<p>
+<strong>RED → 4</strong><br>
+<strong>BLUE → 0</strong><br>
+<strong>YELLOW → 2</strong>
+</p>
+
+<p>
+Remove each thread after identifying its number
+before moving on to the next colour.
+</p>
+
+<div class="code">
+CODE = 402
+</div>
+
+<p>
+Use <strong>402</strong>
+to open the next locked container.
+</p>
+
+</div>
+</div>
+
+</div>
+</details>
+
+
+<!-- CONFIDENTIAL FILE -->
+
+<details class="challenge">
+
+<summary>
+<span class="summary-left">
+<span class="num">07</span>
+<span>CONFIDENTIAL FILE</span>
+</span>
+<span class="plus">+</span>
+</summary>
+
+<div class="content">
+
+<div class="hint">
+
+<div class="hint-head">
+<div class="hint-label">HINT 01 <small>// NUDGE</small></div>
+<button>Reveal</button>
+</div>
+
+<div class="hint-body">
+
+<p>
+The <strong>CONFIDENTIAL file</strong>
+is designed to be used with another document.
+</p>
+
+<p>The holes are there for a reason.</p>
+
+<p>
+Look for a document that can be placed
+behind the CONFIDENTIAL file.
+</p>
+
+</div>
+</div>
+
+
+<div class="hint">
+
+<div class="hint-head">
+<div class="hint-label">HINT 02 <small>// GUIDANCE</small></div>
+<button>Reveal</button>
+</div>
+
+<div class="hint-body">
+
+<p>
+Place the correct document behind the
+<strong>CONFIDENTIAL file</strong>
+and align it carefully with the openings.
+</p>
+
+<p>
+When properly aligned,
+the holes will reveal <strong>four words</strong>.
+</p>
+
+<p>Read them in order.</p>
+
+</div>
+</div>
+
+
+<div class="hint">
+
+<div class="hint-head">
+<div class="hint-label">
+HINT 03 <small>// EXTRA GUIDANCE</small>
+</div>
+<button>Reveal</button>
+</div>
+
+<div class="hint-body">
+
+<p>The four words are:</p>
+
+<div class="code">
+MATCH – SQUARE – CROSS – STAR
+</div>
+
+<p>They are instructions.</p>
+
+<p>
+<strong>MATCH</strong> tells you what to do.
+The other three words tell you the order
+in which to do it.
+</p>
+
+<p>
+Fold the document by matching identical symbols:
+</p>
+
+<p>
+<strong>SQUARE → CROSS → STAR</strong>
+</p>
+
+</div>
+</div>
+
+
+<div class="hint solution">
+
+<div class="hint-head">
+<div class="hint-label">SOLUTION <small>// OVERRIDE</small></div>
+<button>Reveal</button>
+</div>
+
+<div class="hint-body">
+
+<p>
+Fold the matching symbols together
+in this exact order:
+</p>
+
+<p>
+<strong>
+1. SQUARE<br>
+2. CROSS<br>
+3. STAR
+</strong>
+</p>
+
+<p>The folds reveal:</p>
+
+<div class="code">
+283
+</div>
+
+<p>
+<strong>283 is not a combination for a lock.</strong>
+</p>
+
+<p>
+Look at the three sealed evidence bags.
+</p>
+
+<p>Only one should be opened.</p>
+
+<p>
+<strong>Open the evidence bag marked 283.</strong>
+</p>
+
+<p class="danger">
+DO NOT OPEN THE OTHER TWO.
+</p>
+
+</div>
+</div>
+
+</div>
+</details>
+
+
+<!-- EVIDENCE BAG -->
+
+<details class="challenge">
+
+<summary>
+<span class="summary-left">
+<span class="num">08</span>
+<span>EVIDENCE BAG 283</span>
+</span>
+<span class="plus">+</span>
+</summary>
+
+<div class="content">
+
+<div class="hint">
+
+<div class="hint-head">
+<div class="hint-label">HINT 01 <small>// NUDGE</small></div>
+<button>Reveal</button>
+</div>
+
+<div class="hint-body">
+
+<p>
+Everything you need is inside — and outside —
+the evidence bag.
+</p>
+
+<p>
+Each piece of evidence tells you something
+about <strong>one person</strong>.
+</p>
+
+<p>Use the <strong>Personnel Board</strong>.</p>
+
+</div>
+</div>
+
+
+<div class="hint">
+
+<div class="hint-head">
+<div class="hint-label">HINT 02 <small>// GUIDANCE</small></div>
+<button>Reveal</button>
+</div>
+
+<div class="hint-body">
+
+<p>
+You are looking for
+<strong>four identifying details</strong>.
+</p>
+
+<ul>
+<li>the hospital wristband</li>
+<li>the time card</li>
+<li>the paint receipt</li>
+<li>the letter printed on the outside of the evidence bag</li>
+</ul>
+
+<p>
+Translate each clue into information
+you can compare with the
+<strong>Personnel Board</strong>.
+</p>
+
+</div>
+</div>
+
+
+<div class="hint">
+
+<div class="hint-head">
+<div class="hint-label">
+HINT 03 <small>// EXTRA GUIDANCE</small>
+</div>
+<button>Reveal</button>
+</div>
+
+<div class="hint-body">
+
+<p>
+<strong>HOSPITAL WRISTBAND → MEDICAL</strong><br>
+<strong>TIME CARD → NIGHT</strong><br>
+<strong>RED PAINT RECEIPT → RED</strong><br>
+<strong>EVIDENCE BAG → B</strong>
+</p>
+
+<p>
+Find the only person on the Personnel Board
+who matches all four.
+</p>
+
+</div>
+</div>
+
+
+<div class="hint solution">
+
+<div class="hint-head">
+<div class="hint-label">SOLUTION <small>// OVERRIDE</small></div>
+<button>Reveal</button>
+</div>
+
+<div class="hint-body">
+
+<p>The four identifying details are:</p>
+
+<div class="code">
+MEDICAL — NIGHT — RED — B
+</div>
+
+<p>Only one person matches all four:</p>
+
+<div class="code">
+SOPHIE LENOIR
+</div>
+
+<p>
+<strong>SOPHIE LENOIR</strong>
+is the person you need to identify.
+</p>
+
+</div>
+</div>
+
+</div>
+</details>
+
+
+<!-- CONTACT SOPHIE -->
+
+<details class="challenge">
+
+<summary>
+<span class="summary-left">
+<span class="num">09</span>
+<span>CONTACT SOPHIE LENOIR</span>
+</span>
+<span class="plus">+</span>
+</summary>
+
+<div class="content">
+
+<div class="hint">
+
+<div class="hint-head">
+<div class="hint-label">HINT 01 <small>// NUDGE</small></div>
+<button>Reveal</button>
+</div>
+
+<div class="hint-body">
+
+<p>
+You have identified Sophie Lenoir for a reason.
+</p>
+
+<p>
+Finding her name is not the end of the investigation.
+</p>
+
+<p>Look for a way to contact her.</p>
+
+</div>
+</div>
+
+
+<div class="hint">
+
+<div class="hint-head">
+<div class="hint-label">HINT 02 <small>// GUIDANCE</small></div>
+<button>Reveal</button>
+</div>
+
+<div class="hint-body">
+
+<p>
+Check the <strong>Emergency Contact Directory</strong>.
+</p>
+
+<p>
+Find Sophie Lenoir and locate her email address.
+</p>
+
+<p>Then contact her directly.</p>
+
+</div>
+</div>
+
+
+<div class="hint">
+
+<div class="hint-head">
+<div class="hint-label">
+HINT 03 <small>// EXTRA GUIDANCE</small>
+</div>
+<button>Reveal</button>
+</div>
+
+<div class="hint-body">
+
+<p>
+Use the email address listed for Sophie Lenoir
+in the Emergency Contact Directory.
+</p>
+
+<p>Send her an email from your phone.</p>
+
+<p>
+You do not need a password,
+code or special phrase.
+</p>
+
+<p>
+<strong>The content of your message does not matter.</strong>
+</p>
+
+</div>
+</div>
+
+
+<div class="hint solution">
+
+<div class="hint-head">
+<div class="hint-label">SOLUTION <small>// OVERRIDE</small></div>
+<button>Reveal</button>
+</div>
+
+<div class="hint-body">
+
+<p>
+Find Sophie Lenoir in the
+<strong>Emergency Contact Directory</strong>
+and send an email to the address listed next to her name.
+</p>
+
+<p>You can write <strong>anything you like</strong>.</p>
+
+<p>
+Once the message is sent,
+<strong>wait for Sophie’s reply</strong>.
+</p>
+
+</div>
+</div>
+
+</div>
+</details>
+
+
+<!-- LAST ENVELOPE -->
+
+<details class="challenge">
+
+<summary>
+<span class="summary-left">
+<span class="num">10</span>
+<span>LAST ENVELOPE</span>
+</span>
+<span class="plus">+</span>
+</summary>
+
+<div class="content">
+
+<div class="hint">
+
+<div class="hint-head">
+<div class="hint-label">HINT 01 <small>// NUDGE</small></div>
+<button>Reveal</button>
+</div>
+
+<div class="hint-body">
+
+<p>
+Read <strong>Sophie’s reply</strong> carefully.
+</p>
+
+<p>Her message tells you what to do next.</p>
+
+</div>
+</div>
+
+
+<div class="hint">
+
+<div class="hint-head">
+<div class="hint-label">HINT 02 <small>// GUIDANCE</small></div>
+<button>Reveal</button>
+</div>
+
+<div class="hint-body">
+
+<p>
+Sophie has now established contact with you.
+</p>
+
+<p>
+Look for the envelope that could only be opened
+after contact with ALPHA-7 personnel
+had been established.
+</p>
+
+</div>
+</div>
+
+
+<div class="hint">
+
+<div class="hint-head">
+<div class="hint-label">
+HINT 03 <small>// EXTRA GUIDANCE</small>
+</div>
+<button>Reveal</button>
+</div>
+
+<div class="hint-body">
+
+<p>Find the envelope marked:</p>
+
+<div class="code">
+LAST ENVELOPE
+</div>
+
+<p>
+The restriction on it has now been satisfied.
+</p>
+
+<p><strong>You may open it.</strong></p>
+
+</div>
+</div>
+
+
+<div class="hint solution">
+
+<div class="hint-head">
+<div class="hint-label">SOLUTION <small>// OVERRIDE</small></div>
+<button>Reveal</button>
+</div>
+
+<div class="hint-body">
+
+<p><strong>Open the LAST ENVELOPE.</strong></p>
+
+</div>
+</div>
+
+</div>
+</details>
+
+
+<!-- FINAL NODE SEQUENCE -->
+
+<details class="challenge">
+
+<summary>
+<span class="summary-left">
+<span class="num">11</span>
+<span>FINAL NODE SEQUENCE</span>
+</span>
+<span class="plus">+</span>
+</summary>
+
+<div class="content">
+
+<div class="hint">
+
+<div class="hint-head">
+<div class="hint-label">HINT 01 <small>// NUDGE</small></div>
+<button>Reveal</button>
+</div>
+
+<div class="hint-body">
+
+<p>
+The cards describe <strong>one single sequence</strong>.
+</p>
+
+<p>Do not solve each card separately.</p>
+
+<p>
+Combine all the clues to determine
+the correct order of the five coloured nodes.
+</p>
+
+</div>
+</div>
+
+
+<div class="hint">
+
+<div class="hint-head">
+<div class="hint-label">HINT 02 <small>// GUIDANCE</small></div>
+<button>Reveal</button>
+</div>
+
+<div class="hint-body">
+
+<p>
+There are five positions and five coloured nodes:
+</p>
+
+<div class="code">
+BLUE — RED — GREEN — YELLOW — BLACK
+</div>
+
+<ul>
+
+<li>
+<strong>Before</strong>
+does not necessarily mean immediately before.
+</li>
+
+<li>
+<strong>Adjacent</strong>
+means directly next to.
+</li>
+
+<li>
+<strong>One node separates</strong>
+means there is exactly one position between them.
+</li>
+
+<li>
+The even positions are <strong>2 and 4</strong>.
+</li>
+
+</ul>
+
+<p>
+Every clue must be true at the same time.
+</p>
+
+</div>
+</div>
+
+
+<div class="hint">
+
+<div class="hint-head">
+<div class="hint-label">
+HINT 03 <small>// EXTRA GUIDANCE</small>
+</div>
+<button>Reveal</button>
+</div>
+
+<div class="hint-body">
+
+<p>
+Start with <strong>YELLOW and BLACK</strong>.
+</p>
+
+<p>You know that:</p>
+
+<p>
+<strong>BLACK is after YELLOW</strong>,
+and exactly one node separates them.
+</p>
+
+<p>
+Use this to narrow down their possible positions.
+</p>
+
+<p>
+Then use the clues involving
+<strong>BLUE, RED and GREEN</strong>
+to eliminate the remaining possibilities.
+</p>
+
+<p>
+There is only one sequence
+that satisfies every clue.
+</p>
+
+</div>
+</div>
+
+
+<div class="hint solution">
+
+<div class="hint-head">
+<div class="hint-label">SOLUTION <small>// OVERRIDE</small></div>
+<button>Reveal</button>
+</div>
+
+<div class="hint-body">
+
+<p>
+The only sequence that satisfies all the clues is:
+</p>
+
+<div class="code">
+BLUE → YELLOW → GREEN → BLACK → RED
+</div>
+
+<p>
+<strong>NODE SEQUENCE CONFIRMED</strong>
+</p>
+
+<p>
+Scan the <strong>QR terminal card</strong>
+and enter the node sequence in the correct order.
+</p>
+
+<p>
+Once the sequence has been accepted:
+</p>
+
+<div class="complete">
+
+<span>CONGRATULATIONS</span>
+
+<strong>
+YOU HAVE COMPLETED ALPHA-7.
+</strong>
+
+<div style="margin-top:8px;color:#d78379;font-weight:bold;">
+MISSION COMPLETE.
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+</details>
+
+
+</section>
+
+
+<footer>
+PROJECT UNRIDDLE // ALPHA-7 // EMERGENCY ASSISTANCE PROTOCOL
+</footer>
+
+
+</main>
+
+
+<script>
+
+document.querySelectorAll(".hint button").forEach(button => {
+
+    button.addEventListener("click", () => {
+
+        const body =
+        button.closest(".hint").querySelector(".hint-body");
+
+        const open =
+        body.classList.toggle("show");
+
+        button.textContent =
+        open ? "Hide" : "Reveal";
+
+    });
+
+});
+
+</script>
+
+</body>
+</html>
