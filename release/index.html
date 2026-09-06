@@ -6,6 +6,7 @@
 <title>ALPHA-7 Emergency Release</title>
 
 <style>
+
 * {
   box-sizing: border-box;
 }
@@ -23,7 +24,10 @@ body {
   padding: 20px;
 }
 
-/* MAIN METAL PANEL */
+/* =========================
+   MAIN METAL PANEL
+========================= */
+
 .panel {
   width: min(520px, 95vw);
   padding: 38px 28px 32px;
@@ -47,13 +51,18 @@ body {
     inset 0 0 30px rgba(0,0,0,.25);
 }
 
-/* SCREWS */
+
+/* =========================
+   SCREWS
+========================= */
+
 .screw {
   position: absolute;
   width: 17px;
   height: 17px;
   border-radius: 50%;
-  background: radial-gradient(circle at 35% 30%, #777, #222 65%);
+  background:
+    radial-gradient(circle at 35% 30%, #777, #222 65%);
   box-shadow: inset 0 0 3px #000;
 }
 
@@ -73,7 +82,11 @@ body {
 .bl { bottom: 10px; left: 10px; }
 .br { bottom: 10px; right: 10px; }
 
-/* HEADER */
+
+/* =========================
+   HEADER
+========================= */
+
 .header {
   text-align: center;
   margin-bottom: 22px;
@@ -91,15 +104,21 @@ body {
   margin-top: 5px;
 }
 
-/* LCD FRAME */
+
+/* =========================
+   LCD SCREEN
+========================= */
+
 .screen-frame {
   background: #242424;
   border: 3px solid #161616;
   border-radius: 7px;
   padding: 10px;
+
   box-shadow:
     inset 0 0 5px #000,
     0 2px 2px rgba(255,255,255,.3);
+
   margin: 0 auto 28px;
 }
 
@@ -110,11 +129,15 @@ body {
   color: #9edaff;
   padding: 18px 10px;
   text-align: center;
+
   display: flex;
   flex-direction: column;
   justify-content: center;
+
   text-shadow: 0 0 7px #5bbcff;
-  box-shadow: inset 0 0 20px rgba(0,0,0,.65);
+
+  box-shadow:
+    inset 0 0 20px rgba(0,0,0,.65);
 }
 
 .screen-main {
@@ -129,7 +152,11 @@ body {
   letter-spacing: 1px;
 }
 
-/* INPUT LIGHTS */
+
+/* =========================
+   INPUT LIGHTS
+========================= */
+
 .sequence {
   display: flex;
   justify-content: center;
@@ -146,7 +173,11 @@ body {
   box-shadow: inset 0 0 5px #000;
 }
 
-/* LABEL */
+
+/* =========================
+   LABEL
+========================= */
+
 .label {
   text-align: center;
   font-size: 11px;
@@ -155,7 +186,11 @@ body {
   margin-bottom: 12px;
 }
 
-/* BUTTON AREA */
+
+/* =========================
+   COLOR BUTTONS
+========================= */
+
 .buttons {
   display: flex;
   justify-content: center;
@@ -163,12 +198,13 @@ body {
   flex-wrap: wrap;
 }
 
-/* INDUSTRIAL BUTTONS */
 .color-button {
   width: 67px;
   height: 67px;
+
   border-radius: 8px;
   border: 7px solid #292929;
+
   cursor: pointer;
 
   box-shadow:
@@ -176,11 +212,14 @@ body {
     0 7px 8px rgba(0,0,0,.45),
     inset 0 0 8px rgba(255,255,255,.45);
 
-  transition: transform .08s, box-shadow .08s;
+  transition:
+    transform .08s,
+    box-shadow .08s;
 }
 
 .color-button:active {
   transform: translateY(4px);
+
   box-shadow:
     0 1px 0 #111,
     inset 0 0 10px rgba(0,0,0,.3);
@@ -211,7 +250,11 @@ body {
   cursor: default;
 }
 
-/* BUTTON LABELS */
+
+/* =========================
+   BUTTON LABELS
+========================= */
+
 .button-labels {
   display: flex;
   justify-content: center;
@@ -227,7 +270,11 @@ body {
   font-weight: bold;
 }
 
-/* CONTROLS */
+
+/* =========================
+   CONTROLS
+========================= */
+
 .controls {
   display: flex;
   justify-content: center;
@@ -239,10 +286,14 @@ body {
   font-family: "Courier New", monospace;
   font-weight: bold;
   letter-spacing: 1px;
+
   padding: 11px 18px;
+
   border: 3px solid #333;
   border-radius: 4px;
+
   background: #aaa9a1;
+
   cursor: pointer;
 
   box-shadow:
@@ -260,7 +311,11 @@ body {
   cursor: default;
 }
 
-/* SUCCESS / ERROR STATES */
+
+/* =========================
+   PANEL SUCCESS / ERROR
+========================= */
+
 .panel.granted {
   box-shadow:
     0 18px 40px rgba(0,0,0,.65),
@@ -280,7 +335,276 @@ body {
   text-shadow: 0 0 8px #ff4136;
 }
 
-/* MOBILE */
+
+/* ==================================================
+   EPIC FINAL SCREEN
+================================================== */
+
+.final-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+
+  background:
+    radial-gradient(circle at center, #07120b 0%, #010302 65%);
+
+  color: #78ff9b;
+
+  display: none;
+  align-items: center;
+  justify-content: center;
+
+  overflow: hidden;
+  padding: 25px;
+}
+
+.final-overlay.active {
+  display: flex;
+}
+
+
+/* CRT SCAN LINES */
+
+.final-overlay::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+
+  pointer-events: none;
+
+  background:
+    repeating-linear-gradient(
+      to bottom,
+      rgba(255,255,255,.025) 0px,
+      rgba(255,255,255,.025) 1px,
+      transparent 2px,
+      transparent 4px
+    );
+
+  z-index: 3;
+}
+
+
+/* GREEN SCREEN GLOW */
+
+.final-overlay::after {
+  content: "";
+  position: absolute;
+  inset: -20%;
+
+  pointer-events: none;
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(48,255,115,.10),
+      transparent 55%
+    );
+
+  animation: finalPulse 2s infinite;
+}
+
+
+/* FINAL CONTENT */
+
+.final-content {
+  width: min(850px, 92vw);
+  text-align: center;
+  position: relative;
+  z-index: 2;
+}
+
+.final-alpha {
+  font-size: clamp(34px, 8vw, 76px);
+  letter-spacing: 12px;
+  font-weight: bold;
+
+  margin-bottom: 38px;
+
+  opacity: 0;
+
+  text-shadow:
+    0 0 10px rgba(80,255,130,.7);
+
+  animation: appear .5s forwards;
+}
+
+.final-status {
+  font-size: clamp(15px, 3vw, 26px);
+  letter-spacing: 3px;
+  min-height: 40px;
+}
+
+
+/* PROGRESS BAR */
+
+.final-progress-wrap {
+  width: 100%;
+  height: 22px;
+
+  border: 2px solid #4cff7c;
+
+  margin: 35px 0 15px;
+
+  padding: 3px;
+
+  opacity: 0;
+
+  box-shadow:
+    0 0 12px rgba(76,255,124,.25);
+}
+
+.final-progress {
+  height: 100%;
+  width: 0%;
+
+  background: #4cff7c;
+
+  box-shadow:
+    0 0 14px #4cff7c;
+}
+
+.final-percent {
+  font-size: 14px;
+  letter-spacing: 2px;
+  opacity: 0;
+}
+
+
+/* ACCESS GRANTED */
+
+.final-granted {
+  display: none;
+}
+
+.final-granted.show {
+  display: block;
+  animation: finalFlash .45s ease-out;
+}
+
+.unlock-icon {
+  font-size: clamp(70px, 15vw, 140px);
+  margin-bottom: 15px;
+
+  filter:
+    drop-shadow(0 0 15px #42ff78);
+}
+
+.access-title {
+  font-size: clamp(38px, 9vw, 90px);
+
+  font-weight: bold;
+  letter-spacing: 5px;
+
+  text-shadow:
+    0 0 10px #50ff80,
+    0 0 25px #28ff69;
+}
+
+.exit-now {
+  margin-top: 22px;
+
+  font-size: clamp(18px, 4vw, 34px);
+
+  letter-spacing: 8px;
+
+  animation:
+    blinkExit .8s infinite;
+}
+
+
+/* =========================
+   FINAL ANIMATIONS
+========================= */
+
+.glitch {
+  animation: glitch .12s 5;
+}
+
+@keyframes appear {
+
+  from {
+    opacity: 0;
+    transform: scale(.96);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+}
+
+@keyframes glitch {
+
+  0% {
+    transform: translate(0);
+  }
+
+  25% {
+    transform: translate(-3px, 2px);
+  }
+
+  50% {
+    transform: translate(3px, -2px);
+  }
+
+  75% {
+    transform: translate(-2px, -1px);
+  }
+
+  100% {
+    transform: translate(0);
+  }
+
+}
+
+@keyframes finalFlash {
+
+  0% {
+    opacity: 0;
+    transform: scale(1.2);
+  }
+
+  50% {
+    opacity: 1;
+  }
+
+  100% {
+    transform: scale(1);
+  }
+
+}
+
+@keyframes blinkExit {
+
+  0%, 45% {
+    opacity: 1;
+  }
+
+  50%, 100% {
+    opacity: .25;
+  }
+
+}
+
+@keyframes finalPulse {
+
+  0%, 100% {
+    opacity: .5;
+  }
+
+  50% {
+    opacity: 1;
+  }
+
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
 @media(max-width:480px) {
 
   .panel {
@@ -302,11 +626,31 @@ body {
   .button-labels {
     gap: 7px;
   }
+
+  .final-alpha {
+    letter-spacing: 7px;
+  }
+
+  .access-title {
+    letter-spacing: 3px;
+  }
+
+  .exit-now {
+    letter-spacing: 5px;
+  }
+
 }
+
 </style>
 </head>
 
+
 <body>
+
+
+<!-- ==================================================
+     MAIN CONTROL PANEL
+================================================== -->
 
 <div class="panel" id="panel">
 
@@ -315,38 +659,63 @@ body {
   <div class="screw bl"></div>
   <div class="screw br"></div>
 
+
   <div class="header">
-    <div class="alpha">ALPHA-7</div>
-    <div class="subtitle">EMERGENCY RELEASE SYSTEM</div>
+
+    <div class="alpha">
+      ALPHA-7
+    </div>
+
+    <div class="subtitle">
+      EMERGENCY RELEASE SYSTEM
+    </div>
+
   </div>
 
+
   <div class="screen-frame">
+
     <div class="screen" id="screen">
 
-      <div class="screen-main" id="mainMessage">
+      <div
+        class="screen-main"
+        id="mainMessage">
         SYSTEM LOCKED
       </div>
 
-      <div class="screen-small" id="smallMessage">
+      <div
+        class="screen-small"
+        id="smallMessage">
         ENTER RELEASE SEQUENCE
       </div>
 
     </div>
+
   </div>
 
-  <div class="sequence" id="sequenceLights">
+
+  <div
+    class="sequence"
+    id="sequenceLights">
+
     <div class="sequence-light"></div>
     <div class="sequence-light"></div>
     <div class="sequence-light"></div>
     <div class="sequence-light"></div>
     <div class="sequence-light"></div>
+
   </div>
+
 
   <div class="label">
     RELEASE SEQUENCE INPUT
   </div>
 
-  <!-- BUTTON ORDER IS DELIBERATELY DIFFERENT FROM THE SOLUTION -->
+
+  <!--
+       VISUAL BUTTON ORDER:
+       RED / GREEN / BLACK / BLUE / YELLOW
+  -->
 
   <div class="buttons">
 
@@ -382,13 +751,31 @@ body {
 
   </div>
 
+
   <div class="button-labels">
-    <div class="button-label">RED</div>
-    <div class="button-label">GREEN</div>
-    <div class="button-label">BLACK</div>
-    <div class="button-label">BLUE</div>
-    <div class="button-label">YELLOW</div>
+
+    <div class="button-label">
+      RED
+    </div>
+
+    <div class="button-label">
+      GREEN
+    </div>
+
+    <div class="button-label">
+      BLACK
+    </div>
+
+    <div class="button-label">
+      BLUE
+    </div>
+
+    <div class="button-label">
+      YELLOW
+    </div>
+
   </div>
+
 
   <div class="controls">
 
@@ -410,9 +797,78 @@ body {
 </div>
 
 
+<!-- ==================================================
+     FULL SCREEN FINALE
+================================================== -->
+
+<div
+  class="final-overlay"
+  id="finalOverlay">
+
+  <div class="final-content">
+
+    <div
+      class="final-alpha"
+      id="finalAlpha">
+      ALPHA-7
+    </div>
+
+
+    <div
+      class="final-status"
+      id="finalStatus">
+      EMERGENCY OVERRIDE ACCEPTED
+    </div>
+
+
+    <div
+      class="final-progress-wrap"
+      id="finalProgressWrap">
+
+      <div
+        class="final-progress"
+        id="finalProgress">
+      </div>
+
+    </div>
+
+
+    <div
+      class="final-percent"
+      id="finalPercent">
+      0%
+    </div>
+
+
+    <div
+      class="final-granted"
+      id="finalGranted">
+
+      <div class="unlock-icon">
+        🔓
+      </div>
+
+      <div class="access-title">
+        ACCESS GRANTED
+      </div>
+
+      <div class="exit-now">
+        EXIT NOW
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+
 <script>
 
-/* CORRECT RELEASE SEQUENCE */
+/* ==================================================
+   CORRECT RELEASE SEQUENCE
+================================================== */
 
 const correctSequence = [
   "blue",
@@ -422,7 +878,13 @@ const correctSequence = [
   "green"
 ];
 
+
 let playerSequence = [];
+
+
+/* ==================================================
+   ELEMENTS
+================================================== */
 
 const buttons =
   document.querySelectorAll(".color-button");
@@ -450,120 +912,301 @@ const panel =
 
 
 const colors = {
+
   red: "#d8392e",
+
   green: "#26a75a",
+
   black: "#181818",
+
   blue: "#177bd3",
+
   yellow: "#f0bd20"
+
 };
 
 
-/* COLOR BUTTON INPUT */
+/* ==================================================
+   COLOR BUTTON INPUT
+================================================== */
 
 buttons.forEach(button => {
 
-  button.addEventListener("click", () => {
+  button.addEventListener(
+    "click",
+    () => {
 
-    const color =
-      button.dataset.color;
+      const color =
+        button.dataset.color;
 
-    if (
-      playerSequence.length >= 5 ||
-      playerSequence.includes(color)
-    ) {
-      return;
+
+      if (
+        playerSequence.length >= 5 ||
+        playerSequence.includes(color)
+      ) {
+        return;
+      }
+
+
+      playerSequence.push(color);
+
+      button.classList.add("used");
+
+
+      const index =
+        playerSequence.length - 1;
+
+
+      lights[index].style.background =
+        colors[color];
+
+      lights[index].style.boxShadow =
+        "0 0 10px " + colors[color];
+
+
+      mainMessage.textContent =
+        "INPUT " +
+        playerSequence.length +
+        " / 5";
+
+
+      smallMessage.textContent =
+        playerSequence.length === 5
+        ? "SEQUENCE READY"
+        : "AWAITING NEXT NODE";
+
+
+      if (
+        playerSequence.length === 5
+      ) {
+
+        verifyButton.disabled =
+          false;
+
+      }
+
     }
-
-    playerSequence.push(color);
-
-    button.classList.add("used");
-
-    const index =
-      playerSequence.length - 1;
-
-    lights[index].style.background =
-      colors[color];
-
-    lights[index].style.boxShadow =
-      "0 0 10px " + colors[color];
-
-    mainMessage.textContent =
-      "INPUT " +
-      playerSequence.length +
-      " / 5";
-
-    smallMessage.textContent =
-      playerSequence.length === 5
-      ? "SEQUENCE READY"
-      : "AWAITING NEXT NODE";
-
-    if (playerSequence.length === 5) {
-      verifyButton.disabled = false;
-    }
-
-  });
+  );
 
 });
 
 
-/* VERIFY */
+/* ==================================================
+   VERIFY
+================================================== */
 
-verifyButton.addEventListener("click", () => {
+verifyButton.addEventListener(
+  "click",
+  () => {
 
-  verifyButton.disabled = true;
+    verifyButton.disabled =
+      true;
 
-  mainMessage.textContent =
-    "VERIFYING...";
 
-  smallMessage.textContent =
-    "PROCESSING RELEASE PROTOCOL";
+    mainMessage.textContent =
+      "VERIFYING...";
+
+
+    smallMessage.textContent =
+      "PROCESSING RELEASE PROTOCOL";
+
+
+    setTimeout(() => {
+
+      const correct =
+        playerSequence.every(
+          (color, index) =>
+            color ===
+            correctSequence[index]
+        );
+
+
+      if (correct) {
+
+        mainMessage.textContent =
+          "SEQUENCE VERIFIED";
+
+
+        smallMessage.textContent =
+          "INITIATING EMERGENCY OVERRIDE";
+
+
+        screen.classList.add(
+          "granted-screen"
+        );
+
+
+        panel.classList.add(
+          "granted"
+        );
+
+
+        setTimeout(() => {
+
+          launchFinale();
+
+        }, 900);
+
+      }
+
+
+      else {
+
+        mainMessage.textContent =
+          "ACCESS DENIED";
+
+
+        smallMessage.textContent =
+          "INVALID RELEASE SEQUENCE";
+
+
+        screen.classList.add(
+          "denied-screen"
+        );
+
+      }
+
+    }, 1300);
+
+  }
+);
+
+
+/* ==================================================
+   EPIC FINALE
+================================================== */
+
+function launchFinale() {
+
+  const overlay =
+    document.getElementById(
+      "finalOverlay"
+    );
+
+
+  const status =
+    document.getElementById(
+      "finalStatus"
+    );
+
+
+  const progressWrap =
+    document.getElementById(
+      "finalProgressWrap"
+    );
+
+
+  const progress =
+    document.getElementById(
+      "finalProgress"
+    );
+
+
+  const percent =
+    document.getElementById(
+      "finalPercent"
+    );
+
+
+  const granted =
+    document.getElementById(
+      "finalGranted"
+    );
+
+
+  overlay.classList.add(
+    "active"
+  );
+
+
+  status.classList.add(
+    "glitch"
+  );
+
 
   setTimeout(() => {
 
-    const correct =
-      playerSequence.every(
-        (color, index) =>
-          color === correctSequence[index]
-      );
-
-    if (correct) {
-
-      mainMessage.textContent =
-        "ACCESS GRANTED";
-
-      smallMessage.textContent =
-        "EMERGENCY EXIT RELEASED";
-
-      screen.classList.add(
-        "granted-screen"
-      );
-
-      panel.classList.add(
-        "granted"
-      );
-
-    }
-
-    else {
-
-      mainMessage.textContent =
-        "ACCESS DENIED";
-
-      smallMessage.textContent =
-        "INVALID RELEASE SEQUENCE";
-
-      screen.classList.add(
-        "denied-screen"
-      );
-
-    }
-
-  }, 1300);
-
-});
+    status.textContent =
+      "RELEASING SECURITY LOCKS...";
 
 
-/* RESET */
+    progressWrap.style.opacity =
+      "1";
+
+
+    percent.style.opacity =
+      "1";
+
+
+    let value = 0;
+
+
+    const loading =
+      setInterval(() => {
+
+
+        value +=
+          Math.floor(
+            Math.random() * 9
+          ) + 3;
+
+
+        if (value >= 100) {
+
+          value = 100;
+
+        }
+
+
+        progress.style.width =
+          value + "%";
+
+
+        percent.textContent =
+          value + "%";
+
+
+        if (value === 100) {
+
+          clearInterval(
+            loading
+          );
+
+
+          setTimeout(() => {
+
+
+            status.style.display =
+              "none";
+
+
+            progressWrap.style.display =
+              "none";
+
+
+            percent.style.display =
+              "none";
+
+
+            granted.classList.add(
+              "show"
+            );
+
+
+          }, 700);
+
+        }
+
+      }, 120);
+
+  }, 900);
+
+}
+
+
+/* ==================================================
+   RESET
+================================================== */
 
 resetButton.addEventListener(
   "click",
@@ -575,40 +1218,58 @@ function resetSystem() {
 
   playerSequence = [];
 
+
   mainMessage.textContent =
     "SYSTEM LOCKED";
 
+
   smallMessage.textContent =
     "ENTER RELEASE SEQUENCE";
+
 
   screen.classList.remove(
     "granted-screen",
     "denied-screen"
   );
 
+
   panel.classList.remove(
     "granted"
   );
 
-  buttons.forEach(button => {
-    button.classList.remove("used");
-  });
 
-  lights.forEach(light => {
+  buttons.forEach(
+    button => {
 
-    light.style.background =
-      "#333";
+      button.classList.remove(
+        "used"
+      );
 
-    light.style.boxShadow =
-      "inset 0 0 5px #000";
+    }
+  );
 
-  });
 
-  verifyButton.disabled = true;
+  lights.forEach(
+    light => {
+
+      light.style.background =
+        "#333";
+
+
+      light.style.boxShadow =
+        "inset 0 0 5px #000";
+
+    }
+  );
+
+
+  verifyButton.disabled =
+    true;
 
 }
 
 </script>
+
 
 </body>
 </html>
