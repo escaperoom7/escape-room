@@ -1,1275 +1,693 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>ALPHA-7 Emergency Release</title>
-
 <style>
-
-* {
-  box-sizing: border-box;
+*{box-sizing:border-box}
+body{
+ margin:0;min-height:100vh;display:flex;align-items:center;
+ justify-content:center;padding:20px;color:#171717;
+ font-family:"Courier New",monospace;
+ background:radial-gradient(circle,#25292b,#111415 70%)
+}
+.panel{
+ width:min(520px,95vw);padding:38px 28px 32px;
+ position:relative;border:5px solid #262626;border-radius:9px;
+ background:linear-gradient(115deg,#9b9b94,#c0c0b8 18%,
+ #96968f 48%,#b8b8b0 72%,#888881);
+ box-shadow:0 18px 40px #000a,inset 0 0 0 2px #d1d1c9,
+ inset 0 0 30px #0004
+}
+.screw{
+ position:absolute;width:17px;height:17px;border-radius:50%;
+ background:radial-gradient(circle at 35% 30%,#777,#222 65%);
+ box-shadow:inset 0 0 3px #000
+}
+.screw:after{
+ content:"";position:absolute;left:3px;right:3px;top:7px;
+ height:2px;background:#111;transform:rotate(-20deg)
+}
+.tl{top:10px;left:10px}.tr{top:10px;right:10px}
+.bl{bottom:10px;left:10px}.br{bottom:10px;right:10px}
+.header{text-align:center;margin-bottom:22px}
+.alpha{font-weight:bold;font-size:28px;letter-spacing:5px}
+.subtitle{font-size:12px;letter-spacing:2px;margin-top:5px}
+.screen-frame{
+ background:#242424;border:3px solid #161616;border-radius:7px;
+ padding:10px;margin:0 auto 28px;
+ box-shadow:inset 0 0 5px #000,0 2px 2px #fff5
+}
+.screen{
+ min-height:105px;background:#123c68;border:2px solid #071c31;
+ color:#9edaff;padding:18px 10px;text-align:center;
+ display:flex;flex-direction:column;justify-content:center;
+ text-shadow:0 0 7px #5bbcff;box-shadow:inset 0 0 20px #000a
+}
+.screen-main{font-size:19px;font-weight:bold;letter-spacing:1px}
+.screen-small{margin-top:10px;font-size:12px;letter-spacing:1px}
+.sequence{
+ display:flex;justify-content:center;gap:13px;margin-bottom:25px
+}
+.sequence-light{
+ width:18px;height:18px;border-radius:50%;background:#333;
+ border:2px solid #1c1c1c;box-shadow:inset 0 0 5px #000
+}
+.label{
+ text-align:center;font-size:11px;font-weight:bold;
+ letter-spacing:2px;margin-bottom:12px
+}
+.buttons{
+ display:flex;justify-content:center;gap:12px;flex-wrap:wrap
+}
+.color-button{
+ width:67px;height:67px;border-radius:8px;border:7px solid #292929;
+ cursor:pointer;box-shadow:0 5px 0 #111,0 7px 8px #0007,
+ inset 0 0 8px #fff7;transition:transform .08s,box-shadow .08s
+}
+.color-button:active{
+ transform:translateY(4px);
+ box-shadow:0 1px 0 #111,inset 0 0 10px #0005
+}
+.red{background:#d8392e}.green{background:#26a75a}
+.black{background:#181818}.blue{background:#177bd3}
+.yellow{background:#f0bd20}
+.color-button.used{opacity:.28;cursor:default}
+.button-labels{
+ display:flex;justify-content:center;gap:12px;
+ flex-wrap:wrap;margin-top:9px
+}
+.button-label{
+ width:67px;text-align:center;font-size:10px;font-weight:bold
+}
+.controls{
+ display:flex;justify-content:center;gap:15px;margin-top:30px
+}
+.control{
+ font-family:"Courier New",monospace;font-weight:bold;
+ letter-spacing:1px;padding:11px 18px;border:3px solid #333;
+ border-radius:4px;background:#aaa9a1;cursor:pointer;
+ box-shadow:0 4px 0 #444,inset 0 1px 1px #ddd
+}
+.control:active{transform:translateY(3px);box-shadow:0 1px #444}
+.control:disabled{opacity:.35;cursor:default}
+.panel.granted{
+ box-shadow:0 18px 40px #000a,0 0 35px #2aff7073,
+ inset 0 0 0 2px #d1d1c9
+}
+.screen.granted-screen{
+ background:#103e22;color:#75ff9e;text-shadow:0 0 8px #55ff87
+}
+.screen.denied-screen{
+ background:#571713;color:#ff8c82;text-shadow:0 0 8px #ff4136
 }
 
-body {
-  margin: 0;
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background:
-    radial-gradient(circle at center, #25292b 0%, #111415 70%);
-  font-family: "Courier New", monospace;
-  color: #171717;
-  padding: 20px;
+/* CINEMATIC FINALE */
+.final-overlay{
+ position:fixed;inset:0;z-index:9999;background:#030608;
+ color:#a8f9cb;display:none;align-items:center;
+ justify-content:center;overflow:hidden;padding:22px;
+ text-align:center;isolation:isolate
+}
+.final-overlay.active{display:flex}
+.final-overlay:before{
+ content:"";position:absolute;inset:0;z-index:8;
+ pointer-events:none;
+ background:repeating-linear-gradient(to bottom,
+ #ffffff09 0 1px,transparent 1px 5px)
+}
+.final-overlay.alarm{animation:alarmGlow .6s infinite alternate}
+@keyframes alarmGlow{
+ from{box-shadow:inset 0 0 110px #aa0c0f20}
+ to{box-shadow:inset 0 0 190px #ff161466}
+}
+.final-overlay.liberated{animation:liberationFlash 1.2s ease-out}
+@keyframes liberationFlash{
+ 0%{filter:brightness(2.8)}
+ 45%{filter:brightness(1.5)}
+ 100%{filter:brightness(1)}
+}
+.final-content{
+ position:relative;z-index:5;width:min(780px,94vw);
+ transition:opacity .6s,transform .6s
+}
+.final-content.fade-out{
+ opacity:0;transform:scale(.92);pointer-events:none
+}
+.final-alpha{
+ font-size:clamp(30px,8vw,65px);font-weight:900;
+ letter-spacing:.18em;margin-bottom:28px;
+ text-shadow:0 0 25px #38e98c;
+ animation:alphaBreathe 2s ease-in-out infinite alternate
+}
+@keyframes alphaBreathe{
+ to{text-shadow:0 0 14px #80ffbc,0 0 65px #19ff82}
+}
+.final-status{
+ font-size:clamp(17px,3.6vw,27px);letter-spacing:.11em;
+ min-height:70px;line-height:1.5
+}
+.final-progress-wrap{
+ height:19px;border:2px solid #55fca3;padding:3px;
+ margin:26px auto 12px;max-width:560px;
+ box-shadow:0 0 18px #187547
+}
+.final-progress{
+ height:100%;width:0;background:#63ff9d;
+ box-shadow:0 0 15px #65ffa7;transition:width .13s linear
+}
+.final-percent{font-size:14px;letter-spacing:3px}
+.final-count{
+ font-size:clamp(70px,20vw,160px);font-weight:900;
+ color:#ff5a4f;text-shadow:0 0 18px #f20,0 0 80px #ff2400;
+ line-height:1.1;display:none
+}
+.final-count.visible{display:block;animation:countPop .9s ease-out infinite}
+@keyframes countPop{
+ 0%{transform:scale(1.25);opacity:.4}
+ 40%{transform:scale(1);opacity:1}
+ 100%{opacity:1}
 }
 
-/* =========================
-   MAIN METAL PANEL
-========================= */
-
-.panel {
-  width: min(520px, 95vw);
-  padding: 38px 28px 32px;
-  position: relative;
-  border: 5px solid #262626;
-  border-radius: 9px;
-
-  background:
-    linear-gradient(
-      115deg,
-      #9b9b94 0%,
-      #c0c0b8 18%,
-      #96968f 48%,
-      #b8b8b0 72%,
-      #888881 100%
-    );
-
-  box-shadow:
-    0 18px 40px rgba(0,0,0,.65),
-    inset 0 0 0 2px #d1d1c9,
-    inset 0 0 30px rgba(0,0,0,.25);
+/* BUNKER DOORS */
+.door-scene{
+ position:absolute;inset:0;z-index:4;display:none;
+ overflow:hidden;background:#04131c;perspective:900px
+}
+.door-scene.visible{display:block}
+.outside{
+ position:absolute;inset:0;
+ background:radial-gradient(ellipse at center,#fff 0%,
+ #f2fff9 45%,#9cddd0 75%,#17383b 100%)
+}
+.outside-light{
+ position:absolute;left:50%;top:50%;width:70vw;height:70vw;
+ transform:translate(-50%,-50%);border-radius:50%;
+ background:radial-gradient(circle,#ffffffee 0%,
+ #9affd799 20%,transparent 65%);
+ filter:blur(16px);animation:sunPulse 2s infinite alternate
+}
+@keyframes sunPulse{
+ to{transform:translate(-50%,-50%) scale(1.3);opacity:.85}
+}
+.door-beam{
+ position:absolute;left:49%;top:0;height:100%;width:2%;
+ background:#fff;filter:blur(16px);
+ box-shadow:0 0 90px 30px #fff4cb;
+ opacity:0;z-index:2;pointer-events:none
+}
+.door-scene.open .door-beam{animation:doorLight 3.3s ease-out both}
+@keyframes doorLight{
+ 0%{opacity:.7;transform:scaleX(1)}
+ 50%{opacity:1;transform:scaleX(28)}
+ 100%{opacity:.6;transform:scaleX(70)}
+}
+.door{
+ position:absolute;top:0;bottom:0;width:51%;z-index:3;
+ background:repeating-linear-gradient(90deg,
+ #101a20 0 8px,#35434c 9px 13px,
+ #18232c 14px 38px,#3a4952 39px 42px);
+ border:9px solid #35434a;
+ box-shadow:inset 0 0 120px #000,0 0 55px #000;
+ transition:transform 3.1s cubic-bezier(.15,.6,.2,1)
+}
+.door.left{left:0;border-right:8px solid #526269}
+.door.right{right:0;border-left:8px solid #526269}
+.door:after{
+ content:"";position:absolute;top:0;bottom:0;width:9px;
+ background:#ff4935;box-shadow:0 0 28px #f20,0 0 55px #f20;
+ opacity:.8
+}
+.door.left:after{right:0}
+.door.right:after{left:0}
+.door-scene.open .door.left{transform:translateX(-105%)}
+.door-scene.open .door.right{transform:translateX(105%)}
+.door-label{
+ position:absolute;top:44%;width:100%;
+ font-size:clamp(13px,3vw,22px);font-weight:bold;
+ letter-spacing:.15em;color:#d6e3dc;text-shadow:0 0 8px #000
 }
 
-
-/* =========================
-   SCREWS
-========================= */
-
-.screw {
-  position: absolute;
-  width: 17px;
-  height: 17px;
-  border-radius: 50%;
-  background:
-    radial-gradient(circle at 35% 30%, #777, #222 65%);
-  box-shadow: inset 0 0 3px #000;
+/* VICTORY SCREEN */
+.escape-success{
+ position:absolute;inset:0;z-index:6;display:none;
+ align-items:center;justify-content:center;flex-direction:column;
+ padding:22px;overflow:hidden;color:#d8ffea;
+ background:radial-gradient(ellipse at 50% 44%,
+ #033734ed,#020b13 68%,#000306)
 }
-
-.screw::after {
-  content: "";
-  position: absolute;
-  left: 3px;
-  right: 3px;
-  top: 7px;
-  height: 2px;
-  background: #111;
-  transform: rotate(-20deg);
+.escape-success.visible{
+ display:flex;animation:successIn 1.2s ease-out both
 }
-
-.tl { top: 10px; left: 10px; }
-.tr { top: 10px; right: 10px; }
-.bl { bottom: 10px; left: 10px; }
-.br { bottom: 10px; right: 10px; }
-
-
-/* =========================
-   HEADER
-========================= */
-
-.header {
-  text-align: center;
-  margin-bottom: 22px;
+@keyframes successIn{
+ from{opacity:0;transform:scale(1.06)}
+ to{opacity:1;transform:scale(1)}
 }
-
-.alpha {
-  font-weight: bold;
-  font-size: 28px;
-  letter-spacing: 5px;
+.success-content{
+ position:relative;z-index:3;display:flex;
+ align-items:center;flex-direction:column;max-width:100%
 }
-
-.subtitle {
-  font-size: 12px;
-  letter-spacing: 2px;
-  margin-top: 5px;
+.victory-rays{
+ position:absolute;inset:-80%;
+ background:repeating-conic-gradient(
+ from 0deg at 50% 50%,transparent 0deg 17deg,
+ #31ffa711 18deg 20deg,transparent 21deg 40deg);
+ animation:rayRotate 36s linear infinite
 }
-
-
-/* =========================
-   LCD SCREEN
-========================= */
-
-.screen-frame {
-  background: #242424;
-  border: 3px solid #161616;
-  border-radius: 7px;
-  padding: 10px;
-
-  box-shadow:
-    inset 0 0 5px #000,
-    0 2px 2px rgba(255,255,255,.3);
-
-  margin: 0 auto 28px;
+@keyframes rayRotate{to{transform:rotate(360deg)}}
+.victory-ring{
+ position:absolute;left:50%;top:50%;
+ width:min(78vw,680px);aspect-ratio:1;
+ border:1px solid #58ffb72e;border-radius:50%;
+ box-shadow:0 0 0 65px #29ff9a06,
+ 0 0 0 135px #29ff9a05,inset 0 0 60px #29ff9a17;
+ transform:translate(-50%,-50%);
+ animation:ringBeat 3s ease-in-out infinite
 }
-
-.screen {
-  min-height: 105px;
-  background: #123c68;
-  border: 2px solid #071c31;
-  color: #9edaff;
-  padding: 18px 10px;
-  text-align: center;
-
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-
-  text-shadow: 0 0 7px #5bbcff;
-
-  box-shadow:
-    inset 0 0 20px rgba(0,0,0,.65);
+@keyframes ringBeat{
+ 50%{transform:translate(-50%,-50%) scale(1.08);opacity:.6}
 }
-
-.screen-main {
-  font-size: 19px;
-  font-weight: bold;
-  letter-spacing: 1px;
+.escape-success .eyebrow{
+ font-size:clamp(21px,4vw,42px);letter-spacing:.12em;
+ color:#d7ffe7;margin-bottom:18px;font-weight:bold;
+ text-shadow:0 0 24px #56ffad;
+ animation:successRise .9s .1s both
 }
-
-.screen-small {
-  margin-top: 10px;
-  font-size: 12px;
-  letter-spacing: 1px;
+.mission-complete{
+ font-size:clamp(10px,1.8vw,15px);
+ letter-spacing:.22em;color:#86d5ae;margin-bottom:24px;
+ animation:successRise .9s .2s both
 }
-
-
-/* =========================
-   INPUT LIGHTS
-========================= */
-
-.sequence {
-  display: flex;
-  justify-content: center;
-  gap: 13px;
-  margin-bottom: 25px;
+.escape-success h1{
+ font-family:Arial,sans-serif;
+ font-size:clamp(40px,9.3vw,112px);
+ font-weight:1000;line-height:.96;letter-spacing:-.035em;
+ margin:0;background:linear-gradient(180deg,
+ #fff 0%,#e0ffe9 40%,#61ffa8 100%);
+ color:transparent;background-clip:text;
+ -webkit-background-clip:text;
+ filter:drop-shadow(0 0 28px #2eff8b66);
+ animation:successRise 1s .35s both
 }
-
-.sequence-light {
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  background: #333;
-  border: 2px solid #1c1c1c;
-  box-shadow: inset 0 0 5px #000;
+.escape-success p{
+ font-size:clamp(14px,3vw,22px);line-height:1.5;
+ margin:28px 0 0;max-width:620px;
+ animation:successRise .9s .65s both
 }
-
-
-/* =========================
-   LABEL
-========================= */
-
-.label {
-  text-align: center;
-  font-size: 11px;
-  font-weight: bold;
-  letter-spacing: 2px;
-  margin-bottom: 12px;
+@keyframes successRise{
+ from{opacity:0;transform:translateY(32px) scale(.96)}
+ to{opacity:1;transform:translateY(0) scale(1)}
 }
-
-
-/* =========================
-   COLOR BUTTONS
-========================= */
-
-.buttons {
-  display: flex;
-  justify-content: center;
-  gap: 12px;
-  flex-wrap: wrap;
+.particle{
+ position:absolute;bottom:-20px;width:4px;height:4px;
+ border-radius:50%;background:#a4ffce;
+ box-shadow:0 0 12px #63ffab;
+ animation:particleRise 3s linear infinite;
+ pointer-events:none
 }
-
-.color-button {
-  width: 67px;
-  height: 67px;
-
-  border-radius: 8px;
-  border: 7px solid #292929;
-
-  cursor: pointer;
-
-  box-shadow:
-    0 5px 0 #111,
-    0 7px 8px rgba(0,0,0,.45),
-    inset 0 0 8px rgba(255,255,255,.45);
-
-  transition:
-    transform .08s,
-    box-shadow .08s;
+@keyframes particleRise{
+ 0%{opacity:0;transform:translate(0,0)}
+ 15%{opacity:.9}
+ 100%{opacity:0;transform:translate(var(--drift),-110vh)}
 }
-
-.color-button:active {
-  transform: translateY(4px);
-
-  box-shadow:
-    0 1px 0 #111,
-    inset 0 0 10px rgba(0,0,0,.3);
+@media(max-width:480px){
+ .panel{padding-left:18px;padding-right:18px}
+ .color-button{width:55px;height:55px;border-width:6px}
+ .button-label{width:55px}
+ .buttons,.button-labels{gap:7px}
+ .final-alpha{letter-spacing:7px}
+ .escape-success .eyebrow{letter-spacing:.08em}
+ .escape-success p{margin-top:22px}
 }
-
-.red {
-  background: #d8392e;
+@media(prefers-reduced-motion:reduce){
+ .final-overlay.alarm,.final-count.visible,
+ .victory-rays,.victory-ring,.particle,.final-alpha{
+  animation:none
+ }
+ .door,.final-content{transition:none}
 }
-
-.green {
-  background: #26a75a;
-}
-
-.black {
-  background: #181818;
-}
-
-.blue {
-  background: #177bd3;
-}
-
-.yellow {
-  background: #f0bd20;
-}
-
-.color-button.used {
-  opacity: .28;
-  cursor: default;
-}
-
-
-/* =========================
-   BUTTON LABELS
-========================= */
-
-.button-labels {
-  display: flex;
-  justify-content: center;
-  gap: 12px;
-  flex-wrap: wrap;
-  margin-top: 9px;
-}
-
-.button-label {
-  width: 67px;
-  text-align: center;
-  font-size: 10px;
-  font-weight: bold;
-}
-
-
-/* =========================
-   CONTROLS
-========================= */
-
-.controls {
-  display: flex;
-  justify-content: center;
-  gap: 15px;
-  margin-top: 30px;
-}
-
-.control {
-  font-family: "Courier New", monospace;
-  font-weight: bold;
-  letter-spacing: 1px;
-
-  padding: 11px 18px;
-
-  border: 3px solid #333;
-  border-radius: 4px;
-
-  background: #aaa9a1;
-
-  cursor: pointer;
-
-  box-shadow:
-    0 4px 0 #444,
-    inset 0 1px 1px #ddd;
-}
-
-.control:active {
-  transform: translateY(3px);
-  box-shadow: 0 1px 0 #444;
-}
-
-.control:disabled {
-  opacity: .35;
-  cursor: default;
-}
-
-
-/* =========================
-   PANEL SUCCESS / ERROR
-========================= */
-
-.panel.granted {
-  box-shadow:
-    0 18px 40px rgba(0,0,0,.65),
-    0 0 35px rgba(42,255,112,.45),
-    inset 0 0 0 2px #d1d1c9;
-}
-
-.screen.granted-screen {
-  background: #103e22;
-  color: #75ff9e;
-  text-shadow: 0 0 8px #55ff87;
-}
-
-.screen.denied-screen {
-  background: #571713;
-  color: #ff8c82;
-  text-shadow: 0 0 8px #ff4136;
-}
-
-
-/* ==================================================
-   EPIC FINAL SCREEN
-================================================== */
-
-.final-overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 9999;
-
-  background:
-    radial-gradient(circle at center, #07120b 0%, #010302 65%);
-
-  color: #78ff9b;
-
-  display: none;
-  align-items: center;
-  justify-content: center;
-
-  overflow: hidden;
-  padding: 25px;
-}
-
-.final-overlay.active {
-  display: flex;
-}
-
-
-/* CRT SCAN LINES */
-
-.final-overlay::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-
-  pointer-events: none;
-
-  background:
-    repeating-linear-gradient(
-      to bottom,
-      rgba(255,255,255,.025) 0px,
-      rgba(255,255,255,.025) 1px,
-      transparent 2px,
-      transparent 4px
-    );
-
-  z-index: 3;
-}
-
-
-/* GREEN SCREEN GLOW */
-
-.final-overlay::after {
-  content: "";
-  position: absolute;
-  inset: -20%;
-
-  pointer-events: none;
-
-  background:
-    radial-gradient(
-      circle,
-      rgba(48,255,115,.10),
-      transparent 55%
-    );
-
-  animation: finalPulse 2s infinite;
-}
-
-
-/* FINAL CONTENT */
-
-.final-content {
-  width: min(850px, 92vw);
-  text-align: center;
-  position: relative;
-  z-index: 2;
-}
-
-.final-alpha {
-  font-size: clamp(34px, 8vw, 76px);
-  letter-spacing: 12px;
-  font-weight: bold;
-
-  margin-bottom: 38px;
-
-  opacity: 0;
-
-  text-shadow:
-    0 0 10px rgba(80,255,130,.7);
-
-  animation: appear .5s forwards;
-}
-
-.final-status {
-  font-size: clamp(15px, 3vw, 26px);
-  letter-spacing: 3px;
-  min-height: 40px;
-}
-
-
-/* PROGRESS BAR */
-
-.final-progress-wrap {
-  width: 100%;
-  height: 22px;
-
-  border: 2px solid #4cff7c;
-
-  margin: 35px 0 15px;
-
-  padding: 3px;
-
-  opacity: 0;
-
-  box-shadow:
-    0 0 12px rgba(76,255,124,.25);
-}
-
-.final-progress {
-  height: 100%;
-  width: 0%;
-
-  background: #4cff7c;
-
-  box-shadow:
-    0 0 14px #4cff7c;
-}
-
-.final-percent {
-  font-size: 14px;
-  letter-spacing: 2px;
-  opacity: 0;
-}
-
-
-/* ACCESS GRANTED */
-
-.final-granted {
-  display: none;
-}
-
-.final-granted.show {
-  display: block;
-  animation: finalFlash .45s ease-out;
-}
-
-.unlock-icon {
-  font-size: clamp(70px, 15vw, 140px);
-  margin-bottom: 15px;
-
-  filter:
-    drop-shadow(0 0 15px #42ff78);
-}
-
-.access-title {
-  font-size: clamp(38px, 9vw, 90px);
-
-  font-weight: bold;
-  letter-spacing: 5px;
-
-  text-shadow:
-    0 0 10px #50ff80,
-    0 0 25px #28ff69;
-}
-
-.exit-now {
-  margin-top: 22px;
-
-  font-size: clamp(18px, 4vw, 34px);
-
-  letter-spacing: 8px;
-
-  animation:
-    blinkExit .8s infinite;
-}
-
-
-/* =========================
-   FINAL ANIMATIONS
-========================= */
-
-.glitch {
-  animation: glitch .12s 5;
-}
-
-@keyframes appear {
-
-  from {
-    opacity: 0;
-    transform: scale(.96);
-  }
-
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-
-}
-
-@keyframes glitch {
-
-  0% {
-    transform: translate(0);
-  }
-
-  25% {
-    transform: translate(-3px, 2px);
-  }
-
-  50% {
-    transform: translate(3px, -2px);
-  }
-
-  75% {
-    transform: translate(-2px, -1px);
-  }
-
-  100% {
-    transform: translate(0);
-  }
-
-}
-
-@keyframes finalFlash {
-
-  0% {
-    opacity: 0;
-    transform: scale(1.2);
-  }
-
-  50% {
-    opacity: 1;
-  }
-
-  100% {
-    transform: scale(1);
-  }
-
-}
-
-@keyframes blinkExit {
-
-  0%, 45% {
-    opacity: 1;
-  }
-
-  50%, 100% {
-    opacity: .25;
-  }
-
-}
-
-@keyframes finalPulse {
-
-  0%, 100% {
-    opacity: .5;
-  }
-
-  50% {
-    opacity: 1;
-  }
-
-}
-
-
-/* =========================
-   MOBILE
-========================= */
-
-@media(max-width:480px) {
-
-  .panel {
-    padding-left: 18px;
-    padding-right: 18px;
-  }
-
-  .color-button {
-    width: 55px;
-    height: 55px;
-    border-width: 6px;
-  }
-
-  .button-label {
-    width: 55px;
-  }
-
-  .buttons,
-  .button-labels {
-    gap: 7px;
-  }
-
-  .final-alpha {
-    letter-spacing: 7px;
-  }
-
-  .access-title {
-    letter-spacing: 3px;
-  }
-
-  .exit-now {
-    letter-spacing: 5px;
-  }
-
-}
-
 </style>
 </head>
-
-
 <body>
 
-
-<!-- ==================================================
-     MAIN CONTROL PANEL
-================================================== -->
-
+<!-- MAIN CONTROL PANEL -->
 <div class="panel" id="panel">
+ <div class="screw tl"></div>
+ <div class="screw tr"></div>
+ <div class="screw bl"></div>
+ <div class="screw br"></div>
 
-  <div class="screw tl"></div>
-  <div class="screw tr"></div>
-  <div class="screw bl"></div>
-  <div class="screw br"></div>
+ <div class="header">
+  <div class="alpha">ALPHA-7</div>
+  <div class="subtitle">EMERGENCY RELEASE SYSTEM</div>
+ </div>
 
-
-  <div class="header">
-
-    <div class="alpha">
-      ALPHA-7
-    </div>
-
-    <div class="subtitle">
-      EMERGENCY RELEASE SYSTEM
-    </div>
-
+ <div class="screen-frame">
+  <div class="screen" id="screen">
+   <div class="screen-main" id="mainMessage">
+    SYSTEM LOCKED
+   </div>
+   <div class="screen-small" id="smallMessage">
+    ENTER RELEASE SEQUENCE
+   </div>
   </div>
+ </div>
 
+ <div class="sequence" id="sequenceLights">
+  <div class="sequence-light"></div>
+  <div class="sequence-light"></div>
+  <div class="sequence-light"></div>
+  <div class="sequence-light"></div>
+  <div class="sequence-light"></div>
+ </div>
 
-  <div class="screen-frame">
+ <div class="label">RELEASE SEQUENCE INPUT</div>
 
-    <div class="screen" id="screen">
+ <div class="buttons">
+  <button class="color-button red"
+   data-color="red" aria-label="Red"></button>
+  <button class="color-button green"
+   data-color="green" aria-label="Green"></button>
+  <button class="color-button black"
+   data-color="black" aria-label="Black"></button>
+  <button class="color-button blue"
+   data-color="blue" aria-label="Blue"></button>
+  <button class="color-button yellow"
+   data-color="yellow" aria-label="Yellow"></button>
+ </div>
 
-      <div
-        class="screen-main"
-        id="mainMessage">
-        SYSTEM LOCKED
-      </div>
+ <div class="button-labels">
+  <div class="button-label">RED</div>
+  <div class="button-label">GREEN</div>
+  <div class="button-label">BLACK</div>
+  <div class="button-label">BLUE</div>
+  <div class="button-label">YELLOW</div>
+ </div>
 
-      <div
-        class="screen-small"
-        id="smallMessage">
-        ENTER RELEASE SEQUENCE
-      </div>
-
-    </div>
-
-  </div>
-
-
-  <div
-    class="sequence"
-    id="sequenceLights">
-
-    <div class="sequence-light"></div>
-    <div class="sequence-light"></div>
-    <div class="sequence-light"></div>
-    <div class="sequence-light"></div>
-    <div class="sequence-light"></div>
-
-  </div>
-
-
-  <div class="label">
-    RELEASE SEQUENCE INPUT
-  </div>
-
-
-  <!--
-       VISUAL BUTTON ORDER:
-       RED / GREEN / BLACK / BLUE / YELLOW
-  -->
-
-  <div class="buttons">
-
-    <button
-      class="color-button red"
-      data-color="red"
-      aria-label="Red">
-    </button>
-
-    <button
-      class="color-button green"
-      data-color="green"
-      aria-label="Green">
-    </button>
-
-    <button
-      class="color-button black"
-      data-color="black"
-      aria-label="Black">
-    </button>
-
-    <button
-      class="color-button blue"
-      data-color="blue"
-      aria-label="Blue">
-    </button>
-
-    <button
-      class="color-button yellow"
-      data-color="yellow"
-      aria-label="Yellow">
-    </button>
-
-  </div>
-
-
-  <div class="button-labels">
-
-    <div class="button-label">
-      RED
-    </div>
-
-    <div class="button-label">
-      GREEN
-    </div>
-
-    <div class="button-label">
-      BLACK
-    </div>
-
-    <div class="button-label">
-      BLUE
-    </div>
-
-    <div class="button-label">
-      YELLOW
-    </div>
-
-  </div>
-
-
-  <div class="controls">
-
-    <button
-      class="control"
-      id="resetButton">
-      RESET
-    </button>
-
-    <button
-      class="control"
-      id="verifyButton"
-      disabled>
-      VERIFY
-    </button>
-
-  </div>
-
+ <div class="controls">
+  <button class="control" id="resetButton">RESET</button>
+  <button class="control" id="verifyButton" disabled>
+   VERIFY
+  </button>
+ </div>
 </div>
 
+<!-- CINEMATIC FULL-SCREEN FINALE -->
+<div class="final-overlay" id="finalOverlay"
+ role="status" aria-live="polite">
 
-<!-- ==================================================
-     FULL SCREEN FINALE
-================================================== -->
-
-<div
-  class="final-overlay"
-  id="finalOverlay">
-
-  <div class="final-content">
-
-    <div
-      class="final-alpha"
-      id="finalAlpha">
-      ALPHA-7
-    </div>
-
-
-    <div
-      class="final-status"
-      id="finalStatus">
-      EMERGENCY OVERRIDE ACCEPTED
-    </div>
-
-
-    <div
-      class="final-progress-wrap"
-      id="finalProgressWrap">
-
-      <div
-        class="final-progress"
-        id="finalProgress">
-      </div>
-
-    </div>
-
-
-    <div
-      class="final-percent"
-      id="finalPercent">
-      0%
-    </div>
-
-
-    <div
-      class="final-granted"
-      id="finalGranted">
-
-      <div class="unlock-icon">
-        🔓
-      </div>
-
-      <div class="access-title">
-        ACCESS GRANTED
-      </div>
-
-      <div class="exit-now">
-        EXIT NOW
-      </div>
-
-    </div>
-
+ <div class="final-content" id="finalContent">
+  <div class="final-alpha">ALPHA-7</div>
+  <div class="final-status" id="finalStatus">
+   EMERGENCY OVERRIDE ACCEPTED
   </div>
+  <div class="final-progress-wrap" id="finalProgressWrap">
+   <div class="final-progress" id="finalProgress"></div>
+  </div>
+  <div class="final-percent" id="finalPercent">0%</div>
+  <div class="final-count" id="finalCount"></div>
+ </div>
+
+ <div class="door-scene" id="doorScene"
+  aria-hidden="true">
+  <div class="outside">
+   <div class="outside-light"></div>
+  </div>
+  <div class="door-beam"></div>
+  <div class="door left">
+   <div class="door-label">ALPHA-7</div>
+  </div>
+  <div class="door right">
+   <div class="door-label">EXIT / 07</div>
+  </div>
+ </div>
+
+ <div class="escape-success" id="escapeSuccess">
+  <div class="victory-rays"></div>
+  <div class="victory-ring"></div>
+  <div class="success-content">
+   <div class="eyebrow">CONGRATULATIONS!</div>
+   <div class="mission-complete">
+    ALPHA-7 // MISSION COMPLETE
+   </div>
+   <h1>YOU ESCAPED<br>THE BUNKER!</h1>
+   <p>MISSION ACCOMPLISHED, AGENTS.</p>
+  </div>
+ </div>
 
 </div>
-
-
 
 <script>
-
-/* ==================================================
-   CORRECT RELEASE SEQUENCE
-================================================== */
-
-const correctSequence = [
-  "blue",
-  "yellow",
-  "red",
-  "black",
-  "green"
+/* CORRECT RELEASE SEQUENCE */
+const correctSequence=[
+ "blue","yellow","red","black","green"
 ];
 
+let playerSequence=[];
 
-let playerSequence = [];
+const buttons=document.querySelectorAll(".color-button");
+const lights=document.querySelectorAll(".sequence-light");
+const verifyButton=document.getElementById("verifyButton");
+const resetButton=document.getElementById("resetButton");
+const mainMessage=document.getElementById("mainMessage");
+const smallMessage=document.getElementById("smallMessage");
+const screen=document.getElementById("screen");
+const panel=document.getElementById("panel");
 
-
-/* ==================================================
-   ELEMENTS
-================================================== */
-
-const buttons =
-  document.querySelectorAll(".color-button");
-
-const lights =
-  document.querySelectorAll(".sequence-light");
-
-const verifyButton =
-  document.getElementById("verifyButton");
-
-const resetButton =
-  document.getElementById("resetButton");
-
-const mainMessage =
-  document.getElementById("mainMessage");
-
-const smallMessage =
-  document.getElementById("smallMessage");
-
-const screen =
-  document.getElementById("screen");
-
-const panel =
-  document.getElementById("panel");
-
-
-const colors = {
-
-  red: "#d8392e",
-
-  green: "#26a75a",
-
-  black: "#181818",
-
-  blue: "#177bd3",
-
-  yellow: "#f0bd20"
-
+const colors={
+ red:"#d8392e",
+ green:"#26a75a",
+ black:"#181818",
+ blue:"#177bd3",
+ yellow:"#f0bd20"
 };
 
+/* COLOR INPUT */
+buttons.forEach(button=>{
+ button.addEventListener("click",()=>{
+  const color=button.dataset.color;
+  if(playerSequence.length>=5 ||
+     playerSequence.includes(color))return;
 
-/* ==================================================
-   COLOR BUTTON INPUT
-================================================== */
+  playerSequence.push(color);
+  button.classList.add("used");
 
-buttons.forEach(button => {
+  const index=playerSequence.length-1;
+  lights[index].style.background=colors[color];
+  lights[index].style.boxShadow="0 0 10px "+colors[color];
 
-  button.addEventListener(
-    "click",
-    () => {
+  mainMessage.textContent="INPUT "+playerSequence.length+" / 5";
+  smallMessage.textContent=playerSequence.length===5
+   ?"SEQUENCE READY":"AWAITING NEXT NODE";
 
-      const color =
-        button.dataset.color;
-
-
-      if (
-        playerSequence.length >= 5 ||
-        playerSequence.includes(color)
-      ) {
-        return;
-      }
-
-
-      playerSequence.push(color);
-
-      button.classList.add("used");
-
-
-      const index =
-        playerSequence.length - 1;
-
-
-      lights[index].style.background =
-        colors[color];
-
-      lights[index].style.boxShadow =
-        "0 0 10px " + colors[color];
-
-
-      mainMessage.textContent =
-        "INPUT " +
-        playerSequence.length +
-        " / 5";
-
-
-      smallMessage.textContent =
-        playerSequence.length === 5
-        ? "SEQUENCE READY"
-        : "AWAITING NEXT NODE";
-
-
-      if (
-        playerSequence.length === 5
-      ) {
-
-        verifyButton.disabled =
-          false;
-
-      }
-
-    }
-  );
-
+  if(playerSequence.length===5){
+   verifyButton.disabled=false;
+  }
+ });
 });
 
+/* VERIFY */
+verifyButton.addEventListener("click",()=>{
+ verifyButton.disabled=true;
+ mainMessage.textContent="VERIFYING...";
+ smallMessage.textContent="PROCESSING RELEASE PROTOCOL";
 
-/* ==================================================
-   VERIFY
-================================================== */
+ setTimeout(()=>{
+  const correct=playerSequence.length===5 &&
+   playerSequence.every((color,index)=>
+    color===correctSequence[index]);
 
-verifyButton.addEventListener(
-  "click",
-  () => {
-
-    verifyButton.disabled =
-      true;
-
-
-    mainMessage.textContent =
-      "VERIFYING...";
-
-
-    smallMessage.textContent =
-      "PROCESSING RELEASE PROTOCOL";
-
-
-    setTimeout(() => {
-
-      const correct =
-        playerSequence.every(
-          (color, index) =>
-            color ===
-            correctSequence[index]
-        );
-
-
-      if (correct) {
-
-        mainMessage.textContent =
-          "SEQUENCE VERIFIED";
-
-
-        smallMessage.textContent =
-          "INITIATING EMERGENCY OVERRIDE";
-
-
-        screen.classList.add(
-          "granted-screen"
-        );
-
-
-        panel.classList.add(
-          "granted"
-        );
-
-
-        setTimeout(() => {
-
-          launchFinale();
-
-        }, 900);
-
-      }
-
-
-      else {
-
-        mainMessage.textContent =
-          "ACCESS DENIED";
-
-
-        smallMessage.textContent =
-          "INVALID RELEASE SEQUENCE";
-
-
-        screen.classList.add(
-          "denied-screen"
-        );
-
-      }
-
-    }, 1300);
-
+  if(correct){
+   mainMessage.textContent="SEQUENCE VERIFIED";
+   smallMessage.textContent="INITIATING EMERGENCY OVERRIDE";
+   screen.classList.add("granted-screen");
+   panel.classList.add("granted");
+   setTimeout(launchFinale,900);
+  }else{
+   mainMessage.textContent="ACCESS DENIED";
+   smallMessage.textContent="INVALID RELEASE SEQUENCE";
+   screen.classList.add("denied-screen");
   }
-);
+ },1300);
+});
 
+/* CINEMATIC AUDIO */
+let audioContext;
 
-/* ==================================================
-   EPIC FINALE
-================================================== */
-
-function launchFinale() {
-
-  const overlay =
-    document.getElementById(
-      "finalOverlay"
-    );
-
-
-  const status =
-    document.getElementById(
-      "finalStatus"
-    );
-
-
-  const progressWrap =
-    document.getElementById(
-      "finalProgressWrap"
-    );
-
-
-  const progress =
-    document.getElementById(
-      "finalProgress"
-    );
-
-
-  const percent =
-    document.getElementById(
-      "finalPercent"
-    );
-
-
-  const granted =
-    document.getElementById(
-      "finalGranted"
-    );
-
-
-  overlay.classList.add(
-    "active"
-  );
-
-
-  status.classList.add(
-    "glitch"
-  );
-
-
-  setTimeout(() => {
-
-    status.textContent =
-      "RELEASING SECURITY LOCKS...";
-
-
-    progressWrap.style.opacity =
-      "1";
-
-
-    percent.style.opacity =
-      "1";
-
-
-    let value = 0;
-
-
-    const loading =
-      setInterval(() => {
-
-
-        value +=
-          Math.floor(
-            Math.random() * 9
-          ) + 3;
-
-
-        if (value >= 100) {
-
-          value = 100;
-
-        }
-
-
-        progress.style.width =
-          value + "%";
-
-
-        percent.textContent =
-          value + "%";
-
-
-        if (value === 100) {
-
-          clearInterval(
-            loading
-          );
-
-
-          setTimeout(() => {
-
-
-            status.style.display =
-              "none";
-
-
-            progressWrap.style.display =
-              "none";
-
-
-            percent.style.display =
-              "none";
-
-
-            granted.classList.add(
-              "show"
-            );
-
-
-          }, 700);
-
-        }
-
-      }, 120);
-
-  }, 900);
-
+function getAudio(){
+ try{
+  audioContext ||=new(
+   window.AudioContext||window.webkitAudioContext
+  )();
+  if(audioContext.state==="suspended")audioContext.resume();
+  return audioContext;
+ }catch(e){return null}
 }
 
-
-/* ==================================================
-   RESET
-================================================== */
-
-resetButton.addEventListener(
-  "click",
-  resetSystem
-);
-
-
-function resetSystem() {
-
-  playerSequence = [];
-
-
-  mainMessage.textContent =
-    "SYSTEM LOCKED";
-
-
-  smallMessage.textContent =
-    "ENTER RELEASE SEQUENCE";
-
-
-  screen.classList.remove(
-    "granted-screen",
-    "denied-screen"
+function tone(freq=440,duration=.12,type="sine",volume=.07){
+ try{
+  const ctx=getAudio();
+  if(!ctx)return;
+  const osc=ctx.createOscillator();
+  const gain=ctx.createGain();
+  osc.type=type;
+  osc.frequency.setValueAtTime(freq,ctx.currentTime);
+  gain.gain.setValueAtTime(volume,ctx.currentTime);
+  gain.gain.exponentialRampToValueAtTime(
+   .001,ctx.currentTime+duration
   );
-
-
-  panel.classList.remove(
-    "granted"
-  );
-
-
-  buttons.forEach(
-    button => {
-
-      button.classList.remove(
-        "used"
-      );
-
-    }
-  );
-
-
-  lights.forEach(
-    light => {
-
-      light.style.background =
-        "#333";
-
-
-      light.style.boxShadow =
-        "inset 0 0 5px #000";
-
-    }
-  );
-
-
-  verifyButton.disabled =
-    true;
-
+  osc.connect(gain).connect(ctx.destination);
+  osc.start();
+  osc.stop(ctx.currentTime+duration);
+ }catch(e){}
 }
 
+function mechanicalRumble(duration=3.4){
+ try{
+  const ctx=getAudio();
+  if(!ctx)return;
+  const t=ctx.currentTime;
+  const master=ctx.createGain();
+  master.gain.setValueAtTime(.0001,t);
+  master.gain.exponentialRampToValueAtTime(.18,t+.3);
+  master.gain.setValueAtTime(.18,t+duration-.65);
+  master.gain.exponentialRampToValueAtTime(
+   .0001,t+duration
+  );
+  master.connect(ctx.destination);
+
+  [44,55,69].forEach((frequency,i)=>{
+   const osc=ctx.createOscillator();
+   const gain=ctx.createGain();
+   osc.type=i===0?"sawtooth":"triangle";
+   osc.frequency.setValueAtTime(frequency,t);
+   osc.frequency.linearRampToValueAtTime(
+    frequency*.7,t+duration
+   );
+   gain.gain.value=i===0?.34:.15;
+   osc.connect(gain).connect(master);
+   osc.start(t);
+   osc.stop(t+duration+.02);
+  });
+ }catch(e){}
+}
+
+const wait=ms=>new Promise(resolve=>setTimeout(resolve,ms));
+
+/* EPIC BUNKER ESCAPE */
+async function launchFinale(){
+ const overlay=document.getElementById("finalOverlay");
+ const status=document.getElementById("finalStatus");
+ const progress=document.getElementById("finalProgress");
+ const wrap=document.getElementById("finalProgressWrap");
+ const percent=document.getElementById("finalPercent");
+ const count=document.getElementById("finalCount");
+ const content=document.getElementById("finalContent");
+ const doors=document.getElementById("doorScene");
+ const success=document.getElementById("escapeSuccess");
+
+ overlay.classList.add("active","alarm");
+ status.textContent="EMERGENCY OVERRIDE ACCEPTED";
+ tone(660,.15,"square");
+ await wait(1000);
+
+ status.textContent="DISABLING SECURITY LOCKS...";
+
+ for(let value=0;value<=100;value+=4){
+  progress.style.width=value+"%";
+  percent.textContent=value+"%";
+  if(value%20===0){
+   tone(260+value*3,.08,"sawtooth",.025);
+  }
+  await wait(85);
+ }
+
+ status.textContent="FINAL LOCK DISENGAGED";
+ tone(880,.4,"triangle",.09);
+ await wait(950);
+
+ wrap.style.display="none";
+ percent.style.display="none";
+ status.textContent="EXIT OPENING IN";
+ count.classList.add("visible");
+
+ for(let n=3;n>=1;n--){
+  count.textContent=n;
+  tone(330,.22,"square",.065);
+  await wait(950);
+ }
+
+ /* DRAMATIC SILENCE */
+ count.classList.remove("visible");
+ overlay.classList.remove("alarm");
+ status.textContent="SECURITY LOCKS RELEASED";
+ await wait(1150);
+
+ /* HEAVY METAL IMPACT */
+ tone(78,.65,"sawtooth",.19);
+ tone(110,.35,"square",.085);
+ await wait(500);
+
+ status.textContent="BLAST DOORS OPENING...";
+ mechanicalRumble(3.6);
+ doors.classList.add("visible");
+ content.classList.add("fade-out");
+
+ await wait(250);
+ doors.classList.add("open");
+
+ await wait(3450);
+ overlay.classList.add("liberated");
+ success.classList.add("visible");
+
+ /* GREEN VICTORY PARTICLES */
+ for(let i=0;i<65;i++){
+  const piece=document.createElement("b");
+  piece.className="particle";
+  piece.style.left=Math.random()*100+"%";
+  piece.style.setProperty(
+   "--drift",(Math.random()-.5)*360+"px"
+  );
+  piece.style.animationDelay=Math.random()*1.5+"s";
+  piece.style.animationDuration=
+   (2.5+Math.random()*2)+"s";
+  success.appendChild(piece);
+ }
+
+ /* VICTORY CHIME */
+ tone(523,.22,"sine",.08);
+ await wait(180);
+ tone(659,.22,"sine",.08);
+ await wait(180);
+ tone(784,.6,"sine",.08);
+}
+
+/* RESET CONTROL PANEL */
+resetButton.addEventListener("click",resetSystem);
+
+function resetSystem(){
+ playerSequence=[];
+ mainMessage.textContent="SYSTEM LOCKED";
+ smallMessage.textContent="ENTER RELEASE SEQUENCE";
+
+ screen.classList.remove(
+  "granted-screen","denied-screen"
+ );
+ panel.classList.remove("granted");
+
+ buttons.forEach(button=>{
+  button.classList.remove("used");
+ });
+
+ lights.forEach(light=>{
+  light.style.background="#333";
+  light.style.boxShadow="inset 0 0 5px #000";
+ });
+
+ verifyButton.disabled=true;
+}
 </script>
-
-
 </body>
 </html>
