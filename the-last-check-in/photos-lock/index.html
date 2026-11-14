@@ -183,7 +183,7 @@ inputs.forEach((input, index) => {
 function unlock() {
   const code = inputs.map(input => input.value).join("");
   if (code === "651") {
-    message.textContent = "ACCESS GRANTED";
+    message.textContent = "ACCESS GRANTED. THE RED ENVELOPE MAY NOW BE OPENED.";
     message.className = "success";
   } else {
     message.textContent = "ACCESS DENIED";
