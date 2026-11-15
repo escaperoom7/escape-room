@@ -14,7 +14,7 @@
   --paper:#f2e9d5;
   --card:#fffaf0;
 }
-* {box-sizing:border-box}
+* { box-sizing:border-box; }
 body {
   margin:0;
   color:var(--ink);
@@ -88,19 +88,23 @@ summary {
   justify-content:space-between;
   align-items:center;
 }
-summary::-webkit-details-marker {display:none}
+summary::-webkit-details-marker {
+  display:none;
+}
 summary:after {
   content:'+';
   font-size:1.3rem;
   font-weight:normal;
 }
-details[open] summary:after {content:'−'}
+details[open] summary:after {
+  content:'−';
+}
 details p {
   line-height:1.55;
   margin:12px 0 4px;
   font-size:1rem;
 }
-strong {color:#622e29}
+strong { color:#622e29; }
 .note {
   text-align:center;
   font-size:.86rem;
@@ -115,121 +119,160 @@ button {
   padding:9px 14px;
   cursor:pointer;
 }
-button:hover {background:#eadcc2}
-.actions {text-align:center;margin-top:22px}
+button:hover { background:#eadcc2; }
+.actions {
+  text-align:center;
+  margin-top:22px;
+}
 @media(max-width:600px) {
-  main {margin:0;padding:25px 15px;min-height:100vh}
-  section {padding:17px 14px}
+  main {
+    margin:0;
+    padding:25px 15px;
+    min-height:100vh;
+  }
+  section { padding:17px 14px; }
 }
 </style>
 </head>
+
 <body>
 <main>
 <header>
   <div class="brand">
     <div class="monogram">HR</div>
-    HOTEL RAVENWOOD<br>EST. 1928
+    HOTEL RAVENWOOD
   </div>
   <h1>The Last Check-In</h1>
   <p>Confidential Guest Assistance · Hints &amp; Solutions</p>
 </header>
+
 <div class="rule"></div>
 <div id="puzzles"></div>
+
 <div class="actions">
-  <button type="button" id="closeAll">Close all hints</button>
+  <button type="button" id="closeAll">
+    Close all hints
+  </button>
 </div>
-<p class="note">Hotel Ravenwood · For registered guests only</p>
+
+<p class="note">
+  Hotel Ravenwood · For registered guests only
+</p>
 </main>
+
 <script>
 const puzzles = [
-  {
-    title:'01 · Guest Name',
-    h1:'The introductory letter may reveal more than it seems.',
-    h2:'Tilt the paper and look across the logo at the top.',
-    solution:'The hidden name is <strong>Eleanor Whitmore</strong>. Find her in the Guest Register and note her number.'
-  },
-  {
-    title:'02 · Check-In Time',
-    h1:'Complete the photograph. Have you checked both sides?',
-    h2:'Use the cipher wheel. The photograph shows how to align it: A = H.',
-    solution:'Decode the message: <strong>HEADS = HOURS. KEYS = MINUTES.</strong> Count 8 heads and 20 keys. The time is <strong>8:20</strong>. Find it in the Guest Register.'
-  },
-  {
-    title:'03 · Room Number',
-    h1:'The floor plan contains a way to hear the guest’s story.',
-    h2:'Follow her route: window, lounge, plants, then Billiards & Bar. Her room is not immediately beside it.',
-    solution:'Trace her route on the third floor. The room is the next one along after the room beside Billiards & Bar: <strong>317</strong>. Find it in the Guest Register.'
-  },
-  {
-    title:'First Virtual Lock',
-    h1:'You need all three answers from the first three puzzles.',
-    h2:'Find each answer in the Guest Register. Enter the numbers in Guest → Time → Room order.',
-    solution:'The code is <strong>557</strong>.'
-  },
-  {
-    title:'04 · Luggage Tag',
-    h1:'There is something unusual on the back of the tag.',
-    h2:'Match each symbol and dot to the decoding chart.',
-    solution:'Read the symbols from top to bottom: <strong>A1 – E4 – D9</strong>. Use these references in the Room Service Menu.'
-  },
-  {
-    title:'05 · Room Service Menu',
-    h1:'The luggage tag tells you where to look in the menu.',
-    h2:'Letters identify menu sections; numbers tell you which word to count.',
-    solution:'Find word 1 in section A, word 4 in section E and word 9 in section D. They spell <strong>WATCH THE FILM</strong>.'
-  },
-  {
-    title:'06 · Morse Code',
-    h1:'Pay attention to what you hear in the film.',
-    h2:'The short and long signals are Morse code. Decode them as numbers.',
-    solution:'The film gives two coordinates: <strong>(2,3)</strong> and <strong>(7,3)</strong> — column first, row second. Use them on the Lost & Found sheet.'
-  },
-  {
-    title:'07 · Lost & Found',
-    h1:'Two objects in the Lost & Found are worth a closer look.',
-    h2:'Find the combs at (2,3) and (7,3). Use the physical comb to connect their marked points.',
-    solution:'Align the two marked points of the physical comb with the points on the printed combs. Its teeth indicate <strong>PHOTOS</strong>. Open the photograph envelope.'
-  },
-  {
-    title:'08 · Photographs & Calendar',
-    h1:'Not every photograph is needed. Compare them with the calendar.',
-    h2:'Four calendar dates are missing. Find those photos and put them in chronological order.',
-    solution:'Match the four missing dates to the photographs. Read their hidden numbers in chronological order. The final lock code is <strong>2917</strong>.'
-  },
-  {
-    title:'09 · The Last Corridor',
-    h1:'Only one door is the trap. Test each possibility.',
-    h2:'Could the Kitchen Door be the trap? What would that mean for its sign?',
-    solution:'The Kitchen Door cannot be the trap, since that would also make the Cellar Door a trap. The Cellar Door cannot be the trap either, because its sign would contradict that possibility. The Front Door is the trap, and the <strong>KITCHEN DOOR</strong> is the way out.'
-  }
+
+{
+  title:'01 · Guest Name',
+  h1:'The introductory letter may reveal more than it seems.',
+  h2:'Tilt the paper and look across the logo at the top.',
+  solution:'The hidden name is <strong>Eleanor Whitmore</strong>. Find her in the Guest Register and note her number.'
+},
+
+{
+  title:'02 · Check-In Time',
+  h1:'Complete the photograph. Have you checked both sides?',
+  h2:'Use the cipher wheel. The photograph shows how to align it: A = H.',
+  solution:'Decode the message: <strong>HEADS = HOURS. KEYS = MINUTES.</strong> Count 8 heads and 20 keys. The time is <strong>8:20</strong>. Find it in the Guest Register.'
+},
+
+{
+  title:'03 · Room Number',
+  h1:'The floor plan contains a way to hear the guest’s story.',
+  h2:'Follow her route: window, lounge, plants, then Billiards & Bar. Her room is not immediately beside it.',
+  solution:'Trace her route on the third floor. The room is the next one along after the room beside Billiards & Bar: <strong>317</strong>. Find it in the Guest Register.'
+},
+
+{
+  title:'First Virtual Lock',
+  h1:'You need all three answers from the first three puzzles.',
+  h2:'Find each answer in the Guest Register. Enter the numbers in Guest → Time → Room order.',
+  solution:'The code is <strong>557</strong>.'
+},
+
+{
+  title:'04 · Luggage Tag',
+  h1:'There is something unusual on the back of the tag.',
+  h2:'Match each symbol and dot to the decoding charts inside the suitcase.',
+  solution:'Read the symbols from top to bottom: <strong>A1 – E4 – D9</strong>. Use these references in the Room Service Menu.'
+},
+
+{
+  title:'05 · Room Service Menu',
+  h1:'The symbols on the luggage tag are not random. Have you noticed the charts inside the suitcase?',
+  h2:'Use the decoding charts inside the suitcase to decipher the luggage tag. Letters identify menu sections; numbers tell you which word to count. Count only the words in each description, excluding the dish title.',
+  solution:'Find word 1 in section A, word 4 in section E, and word 9 in section D, counting only the descriptions. They spell <strong>HALF A DOZEN</strong>, which means <strong>6</strong>.'
+},
+
+{
+  title:'06 · Film Archive',
+  h1:'Not what you hear. Pay attention to what you see.',
+  h2:'The short and long visual signals represent dots and dashes in Morse code. Decode them as letters.',
+  solution:'The visual signals spell <strong>F I V E</strong>, which means <strong>5</strong>.'
+},
+
+{
+  title:'07 · Lost & Found',
+  h1:'Not everything in the picture is a lost object. Look for something that doesn’t belong.',
+  h2:'Look at the marked corners in the picture. Position the physical comb accordingly and find the hidden number.',
+  solution:'Align the physical comb with the marked corners. Its black teeth point to the letters <strong>O N E</strong>, which means <strong>1</strong>.'
+},
+
+{
+  title:'08 · Red Envelope',
+  h1:'Three puzzles. Three numbers. One code.',
+  h2:'Look carefully at the three squares on the security access screen. Their sizes are not random.',
+  solution:'Arrange the three numbers from largest to smallest, following the size of the squares from left to right: <strong>6 – 5 – 1</strong>. Enter <strong>651</strong> to unlock the Red Envelope.'
+},
+
+{
+  title:'09 · Photographs & Calendar',
+  h1:'Not every photograph is needed. Compare them with the calendar.',
+  h2:'Four calendar dates are missing. Find those photos and put them in chronological order.',
+  solution:'Match the four missing dates to the photographs. Read their hidden numbers in chronological order. The final lock code is <strong>2917</strong>.'
+},
+
+{
+  title:'10 · The Final Corridor',
+  h1:'Only one door leads to freedom. One is a dead end, and one leads nowhere. Remember: the exit always tells the truth, the dead end always lies, and the third door may do either.',
+  h2:'Could the Fire Escape be the dead end? If so, its sign must be false. Think about what that tells you about the Laundry.',
+  solution:`The Fire Escape cannot be the exit. If its sign were true, the Laundry would be the dead end, but that would make the Laundry's own sign true — impossible, because the dead end always lies.<br><br>The Maintenance Shed cannot be the exit either. Its sign would have to be true, making the Laundry's sign false. That would mean the Maintenance Shed is the dead end — a contradiction.<br><br>Therefore, the <strong>LAUNDRY</strong> is the only possible exit.`
+}
+
 ];
+
 const root = document.getElementById('puzzles');
 
 puzzles.forEach(p => {
-  const s = document.createElement('section');
-  const h = document.createElement('h2');
-  h.textContent = p.title;
-  s.append(h);
+  const section = document.createElement('section');
+  const heading = document.createElement('h2');
+  heading.textContent = p.title;
+  section.append(heading);
 
   [
-    ['HINT 1',p.h1],
-    ['HINT 2',p.h2],
-    ['SOLUTION',p.solution]
-  ].forEach(([label,content]) => {
-    const d = document.createElement('details');
-    const sm = document.createElement('summary');
-    const txt = document.createElement('p');
-    sm.textContent = label;
-    txt.innerHTML = content;
-    d.append(sm,txt);
-    s.append(d);
+    ['HINT 1', p.h1],
+    ['HINT 2', p.h2],
+    ['SOLUTION', p.solution]
+  ].forEach(([label, content]) => {
+    const details = document.createElement('details');
+    const summary = document.createElement('summary');
+    const paragraph = document.createElement('p');
+
+    summary.textContent = label;
+    paragraph.innerHTML = content;
+
+    details.append(summary, paragraph);
+    section.append(details);
   });
 
-  root.append(s);
+  root.append(section);
 });
 
 document.getElementById('closeAll').onclick = () => {
-  document.querySelectorAll('details').forEach(d => d.open=false);
+  document.querySelectorAll('details').forEach(d => {
+    d.open = false;
+  });
 };
 </script>
 </body>
